@@ -68,6 +68,7 @@ def process_single_app(app_data, client=None):
         existing_entry['name'] = app_name
         if icon_url:
             existing_entry['icon_url'] = icon_url
+            logger.info(f"Updated icon_url to {icon_url}")
         status = "updated"
         message = f"Updated details in {category}"
     else:
@@ -78,6 +79,8 @@ def process_single_app(app_data, client=None):
         }
         if icon_url:
             new_entry['icon_url'] = icon_url
+            logger.info(f"Set icon_url to {icon_url}")
+            
         data.append(new_entry)
         status = "added"
         message = f"Added to {category}"

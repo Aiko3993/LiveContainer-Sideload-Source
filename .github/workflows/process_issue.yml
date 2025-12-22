@@ -53,12 +53,15 @@ jobs:
                 const cat = extract(`Category${s}`);
                 const icon = extract(`Icon URL${s} (Optional)`);
                 
+                // Allow icon to be empty string if not found or placeholder
+                const cleanIcon = (icon === '_No response_' || icon === 'None' || !icon) ? '' : icon;
+
                 if (name && repo && cat && name !== '_No response_' && repo !== '_No response_') {
                     apps.push({
                         name: name,
                         repo: repo,
                         category: cat,
-                        icon_url: (icon === '_No response_' || icon === 'None' || !icon) ? '' : icon
+                        icon_url: cleanIcon
                     });
                 }
             };
