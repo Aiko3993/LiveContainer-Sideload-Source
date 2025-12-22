@@ -256,6 +256,7 @@ In case of severe failure (e.g., generating a corrupted source.json causing clie
 256→| v1.13 | 2025-12-22 | AI Assistant | **Frontend Overhaul**: Implemented modern "Flat Card" design with Tailwind CSS. Added dynamic theming based on app tint color. Refactored JS/CSS structure for modularity. |
 257→| v1.14 | 2025-12-22 | AI Assistant | **Cleanup & Optimization**: Removed deprecated `index.html` from root. Updated `MAINTENANCE.md` to reflect new directory structure (ES Modules). Verified full CI pipeline robustness. |
 | v1.15 | 2025-12-22 | AI Assistant | **Testing Infrastructure**: Added `.github/scripts/mock_test_runner.py` for comprehensive local logic verification without GitHub API dependencies. Updated validation guidelines. |
+| v1.16 | 2025-12-22 | AI Assistant | **Logic Hardening**: Refined `process_issue.yml` and `add_app.py` to ensure robust icon URL extraction and commit message generation. Implemented "Sync Back" logic in `update_source.py` to automatically populate missing metadata in `apps.json` from auto-discovered sources. |
 
 ---
 

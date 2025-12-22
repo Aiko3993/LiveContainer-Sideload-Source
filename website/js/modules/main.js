@@ -100,4 +100,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof window.isMobile === 'function' && !window.isMobile()) return;
         if (!e.target.closest('a[onclick*="handleDownloadClick"]')) collapseAllExpanded();
     });
+
+    // Back to top scroll handler
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+                backToTopBtn.classList.add('opacity-100', 'translate-y-0');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+                backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
+            }
+        }, { passive: true });
+    }
 });

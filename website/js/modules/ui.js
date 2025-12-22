@@ -154,7 +154,8 @@ export function renderApps() {
     let filtered = currentApps.filter(app => 
         app.name.toLowerCase().includes(query) || 
         (app.developerName && app.developerName.toLowerCase().includes(query)) ||
-        (app.bundleIdentifier && app.bundleIdentifier.toLowerCase().includes(query))
+        (app.bundleIdentifier && app.bundleIdentifier.toLowerCase().includes(query)) ||
+        (app.localizedDescription && app.localizedDescription.toLowerCase().includes(query))
     );
 
     filtered.sort((a, b) => {
