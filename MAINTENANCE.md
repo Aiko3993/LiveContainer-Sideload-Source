@@ -1,6 +1,9 @@
 # Project Maintenance Manual (MAINTENANCE.md)
 
-> **⚠️ IMPORTANT**: This file serves as the core maintenance guidelines for the project. All contributors (including human developers and AI assistants) must read this carefully and adhere strictly to it before making any modifications.
+> **⚠️ CRITICAL WARNING**: 
+> 1. This file is **LOCAL ONLY**. It is listed in `.gitignore` and must **NEVER** be committed to the remote repository.
+> 2. This serves as the private operational guide for the Maintainer and AI Assistants.
+> 3. All contributors must read this carefully before making any modifications.
 
 ## 1. Project Architecture
 
@@ -54,7 +57,7 @@ The `main` branch serves as the development source. It does **NOT** directly con
 ├── CONTRIBUTING.md             # [DOCS] Contribution guide (English)
 ├── CONTRIBUTING_CN.md          # [DOCS] Contribution guide (Chinese)
 ├── LICENSE                     # [LEGAL] MIT License
-├── MAINTENANCE.md              # [DOCS] Project Maintenance Manual (This file)
+├── MAINTENANCE.md              # [DOCS] Project Maintenance Manual (Local Only - .gitignore)
 ├── README.md                   # [DOCS] Project overview (English)
 └── README_CN.md                # [DOCS] Project overview (Chinese)
 ```
@@ -257,8 +260,9 @@ In case of severe failure (e.g., generating a corrupted source.json causing clie
 257→| v1.14 | 2025-12-22 | AI Assistant | **Cleanup & Optimization**: Removed deprecated `index.html` from root. Updated `MAINTENANCE.md` to reflect new directory structure (ES Modules). Verified full CI pipeline robustness. |
 | v1.15 | 2025-12-22 | AI Assistant | **Testing Infrastructure**: Added `.github/scripts/mock_test_runner.py` for comprehensive local logic verification without GitHub API dependencies. Updated validation guidelines. |
 | v1.16 | 2025-12-22 | AI Assistant | **Logic Hardening**: Refined `process_issue.yml` and `add_app.py` to ensure robust icon URL extraction and commit message generation. Implemented "Sync Back" logic in `update_source.py` to automatically populate missing metadata in `apps.json` from auto-discovered sources. |
+| v1.17 | 2025-12-23 | AI Assistant | **Easter Egg Overhaul**: Refactored `effects.js` significantly. <br>1. **Retro Pong**: Rewrote physics engine (acceleration, angular reflection), added game states (serve/play/score), and optimized touch handling.<br>2. **ASCII Waifu**: Replaced static art with `ART_COMPILER_V1.0` interactive terminal for custom ASCII injection.<br>3. **Safety**: Removed flash effects from Konami Code entry; added responsive text scaling.<br>4. **Stability**: Fixed `autoDismiss` logic across all effects. |
 
 ---
 
 
-*Last Updated: 2025-12-22*
+*Last Updated: 2025-12-23*
