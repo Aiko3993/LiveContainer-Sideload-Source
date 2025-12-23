@@ -344,6 +344,10 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
                 curr_path = score_icon_path(best_icon)
                 curr_total = curr_q + curr_path
                 
+                # Apply a moderate bonus if the icon was explicitly provided by the user in the config/issue
+                if config_icon and best_icon == config_icon:
+                    curr_total += 80 # Moderate bonus for user-submitted icons
+                
                 if best_repo_score > curr_total + 10: # 10 points threshold to avoid jitter
                     logger.info(f"Replacing icon with better version from repo: {best_repo_icon} (Score {best_repo_score} > {curr_total})")
                     best_icon = best_repo_icon
