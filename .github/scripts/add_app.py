@@ -2,7 +2,7 @@ import json
 import os
 import sys
 import argparse
-from utils import load_json, save_json, validate_repo_format, validate_url, logger, GitHubClient
+from utils import load_json, save_json, validate_repo_format, validate_url, logger, GitHubClient, normalize_name
 
 def process_single_app(app_data, client=None):
     """Process a single app dictionary. Returns result dict."""
@@ -67,13 +67,45 @@ def process_single_app(app_data, client=None):
     tag_regex = None
     
     name_lower = app_name.lower()
-    if any(kw in name_lower for kw in ['nightly', 'beta', 'alpha', 'dev', 'pre-release', 'experimental']):
+    keywords = ['nightly', 'beta', 'alpha', 'dev', 'pre-release', 'experimental', 'test']
+    
+    # 1. Check static keywords first
+    if any(kw in name_lower for kw in keywords):
         pre_release = True
-        # If "nightly" is specifically mentioned, add a tag filter for it
-        if 'nightly' in name_lower:
-            tag_regex = 'nightly'
-        elif 'beta' in name_lower:
-            tag_regex = 'beta'
+        for kw in keywords:
+            if kw in name_lower:
+                tag_regex = kw
+                break
+
+    # 2. Dynamic Discovery: Check if any part of the name matches a pre-release tag on GitHub
+    if client and not pre_release:
+        try:
+            url = f"https://api.github.com/repos/{repo}/releases"
+            resp = client.get(url)
+            if resp:
+                releases = resp.json()
+                # We only check the extra words in the name compared to the repo name
+                repo_name_parts = set(normalize_name(repo.split('/')[-1]).split())
+                app_name_parts = app_name.split()
+                
+                for part in app_name_parts:
+                    norm_part = normalize_name(part)
+                    if not norm_part or norm_part in repo_name_parts:
+                        continue
+                        
+                    # Check if this part exists in any pre-release tag
+                    for r in releases:
+                        if r.get('prerelease'):
+                            tag = r.get('tag_name', '').lower()
+                            title = r.get('name', '').lower()
+                            if norm_part in tag or norm_part in title:
+                                logger.info(f"Dynamic discovery: found matching pre-release for '{part}' in tag '{tag}'")
+                                pre_release = True
+                                tag_regex = part
+                                break
+                        if pre_release: break
+        except Exception as e:
+            logger.warning(f"Dynamic pre-release discovery failed for {repo}: {e}")
 
     if existing_entry:
         logger.info(f"Updating existing entry for {repo} ({app_name})")

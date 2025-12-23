@@ -10,7 +10,7 @@ from datetime import datetime
 from PIL import Image
 from io import BytesIO
 
-from utils import load_json, save_json, logger, GitHubClient, find_best_icon
+from utils import load_json, save_json, logger, GitHubClient, find_best_icon, score_icon_path, normalize_name
 
 def get_ipa_metadata(ipa_path, default_bundle_id):
     """Extract version, build number, and bundle ID from IPA content."""
@@ -96,15 +96,6 @@ def load_existing_source(source_file, default_name, default_identifier):
         "news": []
     }
 
-def normalize_name(s):
-    """Normalize string for fuzzy comparison: lowercase and remove non-alphanumeric chars and common version suffixes."""
-    if not s: return ""
-    s = s.lower()
-    # Remove common version/flavor suffixes from name before normalization
-    s = re.sub(r'\s*\((nightly|beta|alpha|dev|pre-release|experimental|trollstore|jit|sideloading)\)', '', s)
-    s = re.sub(r'-(nightly|beta|alpha|dev|pre-release|experimental|trollstore|jit|sideloading)', '', s)
-    return re.sub(r'[^a-z0-9]', '', s)
-
 def select_best_ipa(assets, app_config):
     """Select the most appropriate IPA asset based on config and heuristics."""
     ipa_assets = [a for a in assets if a.get('name', '').lower().endswith('.ipa')]
@@ -130,11 +121,41 @@ def select_best_ipa(assets, app_config):
     norm_app_name = normalize_name(app_config['name'])
     norm_repo_name = normalize_name(app_config['github_repo'].split('/')[-1])
     
+    # Track scores for fallback
+    scored_assets = []
+    
+    # Extract "flavor" keywords from app name (e.g., "SideStore" from "LiveContainer + SideStore")
+    # We do this before full normalization to keep words separate
+    name_clean = re.sub(r'\s*\((.*?)\)', '', app_config['name']) # Remove (Nightly) etc.
+    name_words = set(re.findall(r'[a-zA-Z0-9]{3,}', name_clean.lower()))
+    repo_words = set(re.findall(r'[a-zA-Z0-9]{3,}', app_config['github_repo'].lower()))
+    flavor_keywords = name_words - repo_words
+
     for a in ipa_assets:
         base_name = os.path.splitext(a['name'])[0]
         norm_base = normalize_name(base_name)
+        
+        # Exact match (after normalization) is best
         if norm_base == norm_app_name or norm_base == norm_repo_name:
             return a
+            
+        # Calculate a subset score
+        score = 0
+        if norm_app_name in norm_base: score += 10
+        if norm_base in norm_app_name: score += 5
+        
+        # Bonus for matching "flavor" keywords
+        base_name_lower = base_name.lower()
+        for kw in flavor_keywords:
+            if kw in base_name_lower:
+                score += 20
+        
+        scored_assets.append((score, a))
+
+    if scored_assets:
+        scored_assets.sort(key=lambda x: x[0], reverse=True)
+        if scored_assets[0][0] > 0:
+            return scored_assets[0][1]
 
     # 3. Smart Filtering: Exclude common "flavors" if multiple exist
     # We prefer the one without suffixes like -Remote, -HV, -SE
@@ -174,14 +195,28 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
         app_entry['githubRepo'] = repo 
         app_entry['name'] = name 
         
+        # Icon Selection: Compare user-provided vs. auto-discovered
         config_icon = app_config.get('icon_url')
-        if config_icon and config_icon not in ['None', '_No response_']:
-            app_entry['iconURL'] = config_icon
-        elif not app_entry.get('iconURL'):
-            # Try auto-fetch if no icon exists
-            found_icon_auto = find_best_icon(repo, client)
-            if found_icon_auto:
-                app_entry['iconURL'] = found_icon_auto
+        current_icon = app_entry.get('iconURL')
+        
+        best_icon = config_icon if config_icon and config_icon not in ['None', '_No response_'] else current_icon
+        
+        # Always try to find the best possible icon from the repo
+        repo_icon = find_best_icon(repo, client)
+        
+        if repo_icon:
+            if not best_icon:
+                best_icon = repo_icon
+            else:
+                # Compare scores
+                score_current = score_icon_path(best_icon)
+                score_repo = score_icon_path(repo_icon)
+                if score_repo > score_current:
+                    logger.info(f"Replacing icon with better version from repo: {repo_icon} (Score {score_repo} > {score_current})")
+                    best_icon = repo_icon
+        
+        if best_icon:
+            app_entry['iconURL'] = best_icon
 
         config_tint = app_config.get('tint_color')
         if config_tint:

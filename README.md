@@ -40,7 +40,8 @@ Want to add a new app?
 This project runs on GitHub Actions:
 *   **Hourly Updates**: Checks for new releases every hour.
 *   **Smart Parsing**: Extracts metadata (Version, BundleID, TintColor) directly from the IPA.
-*   **Auto Icon Discovery**: Automatically scans the repository for app icons if not provided.
+*   **Auto Version Discovery**: Automatically identifies `Nightly`, `Beta`, etc., versions from app names and cross-references GitHub tags for pre-release matching.
+*   **Quality-First Icon Discovery**: Automatically scans repository for icons and selects the highest-quality version based on scoring.
 *   **Validation**: Automatically checks `apps.json` syntax on Pull Requests.
 
 ## Additional Sources

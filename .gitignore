@@ -22,9 +22,6 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Docs
-MAINTENANCE.md
-
 # Virtual Environments
 venv/
 env/

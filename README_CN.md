@@ -39,7 +39,8 @@ https://raw.githubusercontent.com/Aiko3993/iOS-Sideload-Source/main/sources/stan
 本仓库完全基于 GitHub Actions 运行：
 *   **每小时更新**: 自动检查所有应用的新版本。
 *   **智能解析**: 直接从 IPA 文件中提取元数据 (版本号、BundleID、主题色)。
-*   **自动图标发现**: 如果未配置图标，自动扫描仓库寻找最佳图标。
+*   **自动版本发现**: 自动识别名称中的 `Nightly`、`Beta` 等版本，并结合 GitHub Tag 进行动态匹配。
+*   **高质量图标发现**: 自动扫描仓库图标，并通过评分系统在用户提供和自动发现的图标中择优使用。
 *   **自动验证**: 提交 PR 时会自动检查 `apps.json` 格式是否正确。
 
 ## 其他源

@@ -11,6 +11,7 @@ You don't need to edit any files. Just fill out a simple form!
 1.  Go to the **[Issues](../../issues/new/choose)** tab.
 2.  Click **"Get started"** next to **Add App Issue**.
 3.  Fill in the **App Name**, **GitHub Repository** (e.g., `Owner/Repo`), and select the **Category**.
+    *   **Tip**: To get a Nightly or Beta version, simply include "(Nightly)" or "(Beta)" in the **App Name**. The system will automatically configure the indexing logic for you!
 4.  Click **Submit new issue**.
 
 Once an admin approves your request, the system will **automatically** add the app for you! 🎉
@@ -52,8 +53,10 @@ First, decide where your app belongs. **Do not mix categories.**
     *   ✅ **Recommended**: `Aiko3993/MyCoolApp`
     *   ✅ **Supported**: `https://github.com/Aiko3993/MyCoolApp` (System will auto-parse)
 *   **`icon_url`** (Optional): A **direct link** to the app icon image.
-    *   **Auto-Fetch**: If omitted, the system will automatically scan the repo for the best icon (prioritizing `AppIcon.appiconset`).
-    *   If provided manually, it must start with `http://` or `https://`.
+    *   **Smart Selection**: If omitted, the system automatically scans the repo for the best icon. If provided, the system will still compare its quality with discovered icons and use the best one.
+*   **`pre_release`** (Optional): Boolean (`true` or `false`). Set to `true` to opt-in for beta/nightly versions. (Note: The system also auto-detects this if the app name contains "Nightly" or "Beta").
+*   **`tag_regex`** (Optional): A regular expression to filter releases by tag name (e.g., `^v1\.2`).
+*   **`ipa_regex`** (Optional): A regular expression to select a specific IPA file from releases (e.g., `.*TrollStore.*`).
 
 > ⚠️ **Warning**: Do not add `description`, `version`, or other fields not listed here. The system handles these automatically, and manually added fields will be **discarded**.
 

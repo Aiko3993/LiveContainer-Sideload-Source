@@ -1,9 +1,8 @@
 # Project Maintenance Manual (MAINTENANCE.md)
 
-> **⚠️ CRITICAL WARNING**: 
-> 1. This file is **LOCAL ONLY**. It is listed in `.gitignore` and must **NEVER** be committed to the remote repository.
-> 2. This serves as the private operational guide for the Maintainer and AI Assistants.
-> 3. All contributors must read this carefully before making any modifications.
+> **⚠️ NOTICE**: 
+> 1. This file serves as the operational guide for the Maintainer and AI Assistants.
+> 2. All contributors must read this carefully before making any modifications.
 
 ## 1. Project Architecture
 
@@ -21,7 +20,7 @@ The `main` branch serves as the development source. It does **NOT** directly con
 │   │   └── config.yml          # [CONFIG] Issue template configuration
 │   ├── scripts/
 │   │   ├── add_app.py          # [UTILITY] Handles app requests (add/remove), supports dynamic categories
-│   │   ├── update_source.py    # [CORE] Full source regeneration, Icon auto-discovery, & APPS.md builder (from source.json)
+│   │   ├── update_source.py    # [CORE] Full source regeneration, Smart Parsing, Auto Version/Icon Discovery, & APPS.md builder
 │   │   ├── validate_apps.py    # [VALIDATION] Validates apps.json (auto-discovers config files)
 │   │   ├── sync_issue_template.py # [AUTOMATION] Syncs directory structure to Issue Template dropdowns
 │   │   └── utils.py            # [SHARED] Common utilities (JSON, Logger, GitHub Client, Icon Finder)
@@ -57,7 +56,7 @@ The `main` branch serves as the development source. It does **NOT** directly con
 ├── CONTRIBUTING.md             # [DOCS] Contribution guide (English)
 ├── CONTRIBUTING_CN.md          # [DOCS] Contribution guide (Chinese)
 ├── LICENSE                     # [LEGAL] MIT License
-├── MAINTENANCE.md              # [DOCS] Project Maintenance Manual (Local Only - .gitignore)
+├── MAINTENANCE.md              # [DOCS] Project Maintenance Manual
 ├── README.md                   # [DOCS] Project overview (English)
 └── README_CN.md                # [DOCS] Project overview (Chinese)
 ```
