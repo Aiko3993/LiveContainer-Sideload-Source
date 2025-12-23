@@ -255,7 +255,7 @@
     {
       "name": "LiveContainer+SideStore (Nightly)",
       "githubRepo": "LiveContainer/LiveContainer",
-      "bundleIdentifier": "com.kdt.livecontainer.nightly",
+      "bundleIdentifier": "com.kdt.livecontainer.nightly.sidestore",
       "developerName": "LiveContainer",
       "version": "3.6.60",
       "versionDate": "2025-12-21",

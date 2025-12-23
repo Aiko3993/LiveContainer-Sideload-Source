@@ -28,7 +28,7 @@
     },
     {
       "name": "Pica Comic",
-      "bundleIdentifier": "com.github.pacalini.picaComic",
+      "bundleIdentifier": "com.github.pacalini.picaComic.comic.pica",
       "developerName": "Pacalini",
       "version": "4.2.9",
       "versionDate": "2025-11-06",

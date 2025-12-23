@@ -124,11 +124,10 @@ def select_best_ipa(assets, app_config):
     # Track scores for fallback
     scored_assets = []
     
-    # Extract "flavor" keywords from app name (e.g., "SideStore" from "LiveContainer + SideStore")
-    # We do this before full normalization to keep words separate
-    name_clean = re.sub(r'\s*\((.*?)\)', '', app_config['name']) # Remove (Nightly) etc.
-    name_words = set(re.findall(r'[a-zA-Z0-9]{2,}', name_clean.lower()))
-    repo_words = set(re.findall(r'[a-zA-Z0-9]{2,}', app_config['github_repo'].lower()))
+    # Extract "flavor" keywords from app name
+    # We want keywords from the whole name, including those in brackets
+    name_words = set(re.findall(r'[a-z0-9]{2,}', app_config['name'].lower()))
+    repo_words = set(re.findall(r'[a-z0-9]{2,}', app_config['github_repo'].lower()))
     flavor_keywords = name_words - repo_words
 
     for a in ipa_assets:
@@ -194,30 +193,43 @@ def is_square_image(image_url, client, tolerance=0.05):
         return True # Assume OK if check fails
 
 def apply_bundle_id_suffix(bundle_id, app_name, repo_name):
-    """Apply unique suffixes to bundle identifier based on app name/flavor."""
+    """Apply unique suffixes to bundle identifier based on app name/flavor automatically."""
     if not bundle_id: return bundle_id
     
     name_lower = app_name.lower()
-    suffixes = ['nightly', 'beta', 'alpha', 'dev', 'test', 'experimental', 'pre-release', 'jit', 'sidestore', 'hv']
+    repo_name_clean = repo_name.split('/')[-1].lower()
     
-    found_suffix = False
-    for s in suffixes:
-        if s in name_lower:
-            if not bundle_id.endswith(f".{s}"):
-                bundle_id = f"{bundle_id}.{s}"
-            found_suffix = True
-            break
+    # Use a simple clean comparison to see if they are effectively the same name
+    # (e.g., "Pica Comic" vs "PicaComic")
+    def simple_clean(s): return re.sub(r'[^a-z0-9]', '', s.lower())
     
-    if not found_suffix:
-        repo_name_clean = repo_name.split('/')[-1].lower()
-        if normalize_name(app_name) != normalize_name(repo_name_clean):
-            # Use the extra parts of the name as suffix
-            extra = name_lower.replace(repo_name_clean, '').strip()
-            extra_clean = re.sub(r'[^a-z0-9]', '', extra)
-            if extra_clean and len(extra_clean) >= 2:
-                if not bundle_id.endswith(f".{extra_clean}"):
-                    bundle_id = f"{bundle_id}.{extra_clean}"
-    return bundle_id
+    if simple_clean(app_name) == simple_clean(repo_name_clean):
+        return bundle_id
+
+    # Extract words from both to find the "flavor"
+    name_words = re.findall(r'[a-z0-9]{2,}', name_lower)
+    repo_words = set(re.findall(r'[a-z0-9]{2,}', repo_name_clean))
+    
+    # Keywords are words in app name but not in repo name
+    keywords = [w for w in name_words if w not in repo_words]
+    
+    # Also specifically check inside parentheses
+    tags_in_brackets = re.findall(r'\((.*?)\)', name_lower)
+    for tag in tags_in_brackets:
+        tag_clean = re.sub(r'[^a-z0-9]', '', tag.lower())
+        if tag_clean and len(tag_clean) >= 2 and tag_clean not in keywords:
+            keywords.append(tag_clean)
+
+    # Sort keywords to ensure consistent bundle ID generation
+    keywords = sorted(list(set(keywords)))
+    
+    new_bundle_id = bundle_id
+    for kw in keywords:
+        # Avoid adding if already there
+        if not re.search(rf'\.{kw}(\.|$)', new_bundle_id):
+            new_bundle_id = f"{new_bundle_id}.{kw}"
+            
+    return new_bundle_id
 
 def process_app(app_config, existing_source, client, apps_list_to_update=None):
     repo = app_config['github_repo']
