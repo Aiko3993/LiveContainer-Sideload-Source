@@ -527,8 +527,9 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
                                     # Use a unique name for the asset to avoid collisions
                                     # Format: Owner_Repo_ArtifactName.ipa
                                     asset_name = f"{repo.replace('/', '_')}_{artifact['name']}"
-                                    if not asset_name.lower().endswith('.ipa'):
-                                        asset_name += ".ipa"
+                                    if asset_name.lower().endswith('.ipa'):
+                                        asset_name = asset_name[:-4]
+                                    asset_name += ".ipa"
                                         
                                     asset = client.upload_release_asset(current_repo, release['id'], target_ipa, name=asset_name)
                                     if asset:
@@ -577,8 +578,9 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
                             
                             if release:
                                 asset_name = f"{repo.replace('/', '_')}_{artifact['name']}"
-                                if not asset_name.lower().endswith('.ipa'):
-                                    asset_name += ".ipa"
+                                if asset_name.lower().endswith('.ipa'):
+                                    asset_name = asset_name[:-4]
+                                asset_name += ".ipa"
                                     
                                 asset = client.upload_release_asset(current_repo, release['id'], temp_path, name=asset_name)
                                 if asset:
