@@ -52,15 +52,31 @@
 *   **`github_repo`** (必填): 应用的 GitHub 仓库地址 (例如 `Aiko3993/MyCoolApp`)。
     *   ✅ **推荐**: `Aiko3993/MyCoolApp`
     *   ✅ **支持**: `https://github.com/Aiko3993/MyCoolApp` (系统会自动识别)
-*   **`icon_url`** (选填): 应用图标的**直链**。
-    *   **自动抓取**: 如果不填，系统会自动扫描仓库寻找最佳图标 (优先查找 `AppIcon.appiconset`)。
-    *   如果手动提供，必须以 `http://` 或 `https://` 开头。
+*   **`pre_release`** (选填): 布尔值 (`true` 或 `false`)。设置为 `true` 以获取 Beta/Nightly 版本。(提示：如果应用名包含 "Nightly" 或 "Beta"，系统会自动识别)。
+*   **`github_workflow`** (选填): GitHub Actions 工作流文件名 (例如 `build.yml`)。如果应用没有正式 Release，希望从 **GitHub Actions Artifacts** 抓取 IPA 时使用。
+*   **`artifact_name`** (选填): 使用 `github_workflow` 时，用于匹配特定 Artifact 名称的正则表达式。**提示**：系统内置了 5 步智能启发式搜索（包括 IPA 后缀匹配和关键字搜索），通常情况下您可以省略此字段。
+*   **`tag_regex`** (选填): 用于按标签名过滤 Release 的正则表达式 (例如 `^v1\.2`)。
+*   **`ipa_regex`** (选填): 用于从 Release 中选择特定 IPA 文件的正则表达式 (例如 `.*Standard.*`)。当一个 Release 中包含多个 IPA（如标准版和插件版）时非常有用。
+*   **`tint_color`** (选填): 十六进制颜色代码 (例如 `#FF0000`)。如果省略，系统会自动从应用图标中提取主色调。
 
-> ⚠️ **警告**：不要添加 `description`、`version` 或其他未列出的字段。系统会自动处理这些信息，手动添加会被直接丢弃。
+---
+
+### **自动化与智能化特性**
+
+为了简化提交过程，我们的系统会自动执行以下任务：
+
+*   **元数据自动提取**: 系统会自动下载 IPA 以提取精确的 `version` (版本号)、`bundleIdentifier` (包名) 和 `size` (文件大小)。您无需手动提供这些信息。
+*   **Bundle ID 冲突预防**: 如果您添加了同一应用的多个版本（例如 "App Name" 和 "App Name Remote"），系统会自动为包名添加后缀（如 `.remote`），以防止在设备上发生安装冲突。
+*   **视觉智能**:
+    *   **智能图标选择**: 如果未提供 `icon_url`，系统会扫描仓库，并根据分辨率、长宽比和透明度对找到的图标进行评分，选择质量最高的一个。
+    *   **自动同步**: 如果您在 `apps.json` 中更新了 `name` 或 `icon_url`，系统会立即同步这些更改，即使应用版本没有更新。
+*   **Nightly.link 集成**: 对于使用 `github_workflow` 的应用，系统会通过 `nightly.link` 生成高速下载链接，从而绕过 GitHub 对 Artifact 下载的身份验证限制。
 
 ---
 
 ### 第三步：提交审核
+
+> ⚠️ **警告**：不要添加 `description`、`version` 或其他未列出的字段。系统会自动处理这些信息，手动添加会被直接丢弃。
 
 1.  滚动到页面右上角，点击绿色的 **"Commit changes..."** 按钮。
 2.  在弹出的窗口中，选择 **"Propose changes"**。

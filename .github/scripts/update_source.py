@@ -304,14 +304,30 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
             logger.warning(f"No successful workflow run found for {name} ({workflow_file})")
             return existing_source
         
+        # 1. Select the best artifact
         artifacts = client.get_workflow_run_artifacts(repo, workflow_run['id'])
         artifact_name = app_config.get('artifact_name')
+        
         if artifact_name:
             artifact = next((a for a in artifacts if a['name'] == artifact_name), None)
         else:
+            # Smart selection heuristics
+            # Priority 1: Ends with .ipa
             artifact = next((a for a in artifacts if a['name'].lower().endswith('.ipa')), None)
-            if not artifact and artifacts:
-                artifact = artifacts[0]
+            
+            # Priority 2: Contains "ipa", "ios", or "app" (case insensitive)
+            if not artifact:
+                keywords = ['ipa', 'ios', 'app']
+                artifact = next((a for a in artifacts if any(k in a['name'].lower() for k in keywords)), None)
+            
+            # Priority 3: Exclude obvious junk (logs, symbols, tests)
+            if not artifact:
+                junk_keywords = ['log', 'symbol', 'test', 'debug', 'metadata']
+                valid_artifacts = [a for a in artifacts if not any(k in a['name'].lower() for k in junk_keywords)]
+                if valid_artifacts:
+                    artifact = valid_artifacts[0]
+                elif artifacts:
+                    artifact = artifacts[0] # Ultimate fallback
         
         if not artifact:
             logger.warning(f"No suitable artifact found for {name} in run {workflow_run['id']}")
@@ -323,7 +339,13 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
         
         wf_name_clean = workflow_file.replace('.yml', '').replace('.yaml', '')
         branch = workflow_run['head_branch']
+        # Use .zip for nightly.link as GitHub Artifacts are always zipped
         download_url = f"https://nightly.link/{repo}/workflows/{wf_name_clean}/{branch}/{artifact['name']}.zip"
+        
+        # Add status=completed to support non-success runs if needed, 
+        # though our script usually filters for successful runs.
+        # download_url += "?status=completed" 
+        
         size = artifact['size_in_bytes']
     else:
         release = client.get_latest_release(
@@ -430,14 +452,45 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
     
     try:
         if workflow_file:
-            content = client.download_artifact(repo, artifact['id'])
-            if not content: raise Exception("Failed to download artifact")
-            with zipfile.ZipFile(BytesIO(content)) as z:
-                ipa_in_zip = next((n for n in z.namelist() if n.lower().endswith('.ipa')), None)
-                if not ipa_in_zip:
-                    raise Exception(f"No IPA found inside artifact ZIP for {name}")
-                with open(temp_path, 'wb') as f:
-                    f.write(z.read(ipa_in_zip))
+            content = None
+            if client.token:
+                try:
+                    content = client.download_artifact(repo, artifact['id'])
+                except Exception as e:
+                    logger.warning(f"Failed to download artifact via API: {e}")
+            
+            if content:
+                with zipfile.ZipFile(BytesIO(content)) as z:
+                    ipa_in_zip = next((n for n in z.namelist() if n.lower().endswith('.ipa')), None)
+                    if not ipa_in_zip:
+                        raise Exception(f"No IPA found inside artifact ZIP for {name}")
+                    with open(temp_path, 'wb') as f:
+                        f.write(z.read(ipa_in_zip))
+            else:
+                # Fallback to nightly.link for downloading if API fails or no token
+                logger.info(f"Downloading via nightly.link for metadata extraction: {download_url}")
+                
+                # Verify URL first with a HEAD request to handle 404s gracefully
+                head_resp = client.session.head(download_url, timeout=30)
+                if head_resp.status_code == 404:
+                    # Try common variation: without .yaml extension in URL
+                    alt_url = download_url.replace('.yaml', '').replace('.yml', '')
+                    logger.info(f"404 on nightly.link, trying alternative: {alt_url}")
+                    head_resp = client.session.head(alt_url, timeout=30)
+                    if head_resp.status_code == 200:
+                        download_url = alt_url
+                    else:
+                        raise Exception(f"nightly.link returned 404 for both {download_url} and {alt_url}")
+
+                with client.session.get(download_url, stream=True, timeout=300) as r:
+                    r.raise_for_status()
+                    # It's a ZIP from nightly.link
+                    with zipfile.ZipFile(BytesIO(r.content)) as z:
+                        ipa_in_zip = next((n for n in z.namelist() if n.lower().endswith('.ipa')), None)
+                        if not ipa_in_zip:
+                            raise Exception(f"No IPA found inside nightly.link ZIP for {name}")
+                        with open(temp_path, 'wb') as f:
+                            f.write(z.read(ipa_in_zip))
         else:
             with client.session.get(download_url, stream=True, timeout=300) as r:
                 r.raise_for_status()

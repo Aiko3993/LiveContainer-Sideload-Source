@@ -456,6 +456,32 @@
           "sha256": "f687389d5d6c655c320317d26a3629572c50f79353ea72e9dd4103d193bae3c4"
         }
       ]
+    },
+    {
+      "name": "Play! (Nightly)",
+      "githubRepo": "jpd002/Play-",
+      "bundleIdentifier": "com.virtualapplications.play.nightly",
+      "developerName": "jpd002",
+      "version": "0.71-84-g5171569d-nightly.2025-12-23",
+      "versionDate": "2025-12-23",
+      "versionDescription": "Nightly build from commit 5171569d0018e02f731d63ac37d8c34da41ff0a7",
+      "downloadURL": "https://nightly.link/jpd002/Play-/workflows/build-ios/master/Play_iOS.zip",
+      "localizedDescription": "Play! - PlayStation2 Emulator",
+      "iconURL": "https://raw.githubusercontent.com/jpd002/Play-/master/Source/ui_ios/Resources/icon@2x.png",
+      "tintColor": "#BCBCFF",
+      "size": 7085608,
+      "permissions": {},
+      "screenshotURLs": [],
+      "versions": [
+        {
+          "version": "0.71-84-g5171569d-nightly.2025-12-23",
+          "date": "2025-12-23",
+          "localizedDescription": "Nightly build from commit 5171569d0018e02f731d63ac37d8c34da41ff0a7",
+          "downloadURL": "https://nightly.link/jpd002/Play-/workflows/build-ios/master/Play_iOS.zip",
+          "size": 7085608,
+          "sha256": "a30d8c9588a3673d7662218a96d4268f5d019dd6ce3f3c9140cf49f1eb5170c2"
+        }
+      ]
     }
   ],
   "news": []

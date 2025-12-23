@@ -55,14 +55,30 @@ First, decide where your app belongs. **Do not mix categories.**
 *   **`icon_url`** (Optional): A **direct link** to the app icon image.
     *   **Smart Selection**: If omitted, the system automatically scans the repo for the best icon. If provided, the system will still compare its quality with discovered icons and use the best one.
 *   **`pre_release`** (Optional): Boolean (`true` or `false`). Set to `true` to opt-in for beta/nightly versions. (Note: The system also auto-detects this if the app name contains "Nightly" or "Beta").
+*   **`github_workflow`** (Optional): The filename of a GitHub Actions workflow (e.g., `build.yml`). Use this if the app doesn't have formal Releases and you want to pull IPAs from **GitHub Actions Artifacts**.
+*   **`artifact_name`** (Optional): A regular expression to match a specific artifact name when using `github_workflow`. **Tip**: The system uses a 5-step intelligent heuristic (including IPA suffix matching and keyword search), so you can usually omit this.
 *   **`tag_regex`** (Optional): A regular expression to filter releases by tag name (e.g., `^v1\.2`).
-*   **`ipa_regex`** (Optional): A regular expression to select a specific IPA file from releases (e.g., `.*TrollStore.*`).
+*   **`ipa_regex`** (Optional): A regular expression to select a specific IPA file from releases (e.g., `.*Standard.*`). This is useful when a release contains multiple IPA files (e.g., Standard vs. Plus versions).
+*   **`tint_color`** (Optional): A hex color code (e.g., `#FF0000`) for the app's accent color. If omitted, the system automatically extracts the dominant color from the app icon.
 
-> ⚠️ **Warning**: Do not add `description`, `version`, or other fields not listed here. The system handles these automatically, and manually added fields will be **discarded**.
+---
+
+### **Automation & Intelligent Features**
+
+To make contributing easier, our system performs several automated tasks:
+
+*   **Metadata Extraction**: The system automatically downloads the IPA to extract the exact `version`, `bundleIdentifier`, and `size`. You don't need to provide these.
+*   **Bundle ID Conflict Prevention**: If you add multiple versions of the same app (e.g., "App Name" and "App Name Remote"), the system automatically adds a suffix to the Bundle ID to prevent installation conflicts on your device.
+*   **Visual Intelligence**:
+    *   **Smart Icon Selection**: If you don't provide an `icon_url`, the system scans the repository and ranks found icons based on resolution, aspect ratio, and transparency to pick the best one.
+    *   **Auto-Sync**: If you update the `name` or `icon_url` in `apps.json`, the system will sync these changes to the source immediately, even if the app version hasn't changed.
+*   **Nightly.link Integration**: For apps using `github_workflow`, the system generates high-speed download links via `nightly.link`, bypassing GitHub's authentication requirements for artifacts.
 
 ---
 
 ### Step 3: Submit for Review
+
+> ⚠️ **Warning**: Do not add `description`, `version`, or other fields not listed here. The system handles these automatically, and manually added fields will be **discarded**.
 
 1.  Scroll to the top right and click the green **"Commit changes..."** button.
 2.  In the popup window, click **"Propose changes"**.

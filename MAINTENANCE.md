@@ -20,10 +20,10 @@ The `main` branch serves as the development source. It does **NOT** directly con
 │   │   └── config.yml          # [CONFIG] Issue template configuration
 │   ├── scripts/
 │   │   ├── add_app.py          # [UTILITY] Handles app requests (add/remove), supports dynamic categories
-│   │   ├── update_source.py    # [CORE] Full source regeneration, Smart Parsing, Auto Version/Icon Discovery, & APPS.md builder
+│   │   ├── update_source.py    # [CORE] Full source regeneration, Smart Parsing, Auto Version/Icon Discovery, Artifact Support, & Auto-Sync metadata
 │   │   ├── validate_apps.py    # [VALIDATION] Validates apps.json (auto-discovers config files)
 │   │   ├── sync_issue_template.py # [AUTOMATION] Syncs directory structure to Issue Template dropdowns
-│   │   └── utils.py            # [SHARED] Common utilities (JSON, Logger, GitHub Client, Icon Finder)
+│   │   └── utils.py            # [SHARED] Common utilities (JSON, Logger, GitHub Client with Workflow/Artifact support)
 │   └── workflows/
 │       ├── deploy.yml          # [CI] Deploys website and source files to gh-pages
 │       ├── process_issue.yml   # [CI] Automates app addition/rejection from issues
@@ -87,9 +87,25 @@ The deployment structure is a flattened version of `main`:
     *   **Must include**: `name`, `github_repo` (Format: `Owner/Repo`).
     *   **Optional**: 
         *   `icon_url`, `tint_color` (Must be hex code `#RRGGBB`).
-        *   `ipa_regex`: A regular expression to select a specific IPA from GitHub Releases (useful for apps with multiple flavors like UTM).
+        *   `ipa_regex`: A regular expression to select a specific IPA from GitHub Releases.
         *   `pre_release`: Boolean (default: `false`). Set to `true` to prefer pre-releases/nightly versions.
         *   `tag_regex`: A regular expression to filter releases by their tag name.
+        *   `github_workflow`: (New) Workflow file name (e.g., `nightly.yml`) to fetch IPAs from GitHub Actions Artifacts.
+        *   `artifact_name`: (New) Regular expression to match the desired artifact name.
+        *   `bundle_id`: (Auto-Sync) App's bundle identifier. Automatically extracted from IPA and synced back to `apps.json`.
+    *   **Advanced Logic**:
+        *   **Fast Skip**: The script detects if `downloadURL` (Release/Artifact) is unchanged. If unchanged AND the app entry in `apps.json` (name/icon) hasn't changed, it skips heavy processing (scraping & downloading).
+        *   **Metadata Auto-Sync**: Fields like `icon_url` and `bundle_id` discovered by the script are automatically written back to `apps.json` to speed up future runs and improve data completeness.
+        *   **Artifact Selection Heuristic**: When searching inside GitHub Artifacts (ZIP), the script follows a 5-step heuristic:
+            1. **Exact Name Match**: Matches `artifact_name` from config.
+            2. **IPA Suffix**: Looks for files ending in `.ipa`.
+            3. **Keyword Search**: Looks for "ipa", "ios", or "app" in artifact names.
+            4. **Exclusion Filter**: Removes artifacts containing "log", "symbol", "test", "debug", etc.
+            5. **Ultimate Fallback**: Uses the first available artifact if all else fails.
+        *   **Nightly.link Integration**: 
+            *   Bypasses GitHub API token requirements for public downloads.
+            *   **Sanitization**: Automatically handles URL variations (e.g., trying with/without `.yaml` extensions) to avoid 404s.
+            *   **Fallback**: If the GitHub API fails or no token is provided, the script automatically falls back to `nightly.link` for both metadata extraction and final download links.
     *   **Note**: Multiple entries for the same repository are allowed as long as their `name` is unique (e.g., "UTM" and "UTM (TrollStore)").
 *   **deploy.yml (`.github/workflows/`)**:
     *   Responsible for assembling the website and source files and pushing them to the `gh-pages` branch.
@@ -266,6 +282,7 @@ In case of severe failure (e.g., generating a corrupted source.json causing clie
 | v1.17 | 2025-12-23 | AI Assistant | **Easter Egg Overhaul**: Refactored `effects.js` significantly. <br>1. **Retro Pong**: Rewrote physics engine (acceleration, angular reflection), added game states (serve/play/score), and optimized touch handling.<br>2. **ASCII Waifu**: Replaced static art with `ART_COMPILER_V1.0` interactive terminal for custom ASCII injection.<br>3. **Safety**: Removed flash effects from Konami Code entry; added responsive text scaling.<br>4. **Stability**: Fixed `autoDismiss` logic across all effects. |
 | v1.18 | 2025-12-23 | AI Assistant | **Infrastructure Fixes**: <br>1. **GitHub Actions**: Resolved 403 Forbidden error by removing task-level permission overrides in `process_issue.yml`. <br>2. **Issue Templates**: Fixed YAML syntax in `add_app.yml` to restore template visibility and enforced category ordering (Standard > NSFW). <br>3. **Bug Redirection**: Fully redirected Bug Reports to GitHub Discussions via `config.yml`. |
 | v1.19 | 2025-12-23 | AI Assistant | **Release & IPA Logic Enhancements**: <br>1. **Stability First**: Default to latest stable release instead of newest pre-release. <br>2. **Nightly Support**: Added `pre_release` flag in `apps.json` to opt-in for beta/nightly versions. <br>3. **Tag Filtering**: Added `tag_regex` support to allow pinning or filtering releases by tag name. <br>4. **Smart IPA Picker**: Implemented `select_best_ipa` to automatically prioritize clean IPA names (filtering out `-Remote`, `-HV`, etc.) and added `ipa_regex` override support. <br>5. **Multi-Flavor Support**: Updated validation to allow multiple entries for the same repo with unique names. |
+| v1.20 | 2025-12-23 | AI Assistant | **GitHub Actions Artifacts Support**: <br>1. **Artifact Fetching**: Integrated GitHub Actions API to download IPAs from workflow runs (e.g., Amethyst Nightly). <br>2. **Auto-Sync Metadata**: Enhanced script to sync `bundle_id` and `icon_url` back to `apps.json` automatically. <br>3. **Logic Optimization**: Implemented fast-skip for up-to-date apps and refined icon scraping logic. |
 
 ---
 
