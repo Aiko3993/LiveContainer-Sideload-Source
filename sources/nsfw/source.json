@@ -35,7 +35,7 @@
       "versionDescription": "4.2.9 (2025-11-06)\n\n更新说明\n 修复 jm 详情页 作品、人物 tag 151\n 修复 nhentai 某些关键词搜索下的页数错误 150\n htcomic 新增排名页面 139\n 搜索无结果时新增提示 77\n\n安装&更新\n (Android) 安装时不会覆盖 4.0.4 及之前的版本。用户数据通用，请在设置中手动迁移。\n IOS、MacOS 版本未经任何测试，不受任何支持.\n\nFull Changelog: https://github.com/Pacalini/PicaComic/compare/v4.2.7...v4.2.9",
       "downloadURL": "https://github.com/Pacalini/PicaComic/releases/download/v4.2.9/PicaComic-4.2.9-app-ios.ipa",
       "localizedDescription": "A comic app built with Flutter, supporting multiple comic sources.",
-      "iconURL": "https://raw.githubusercontent.com/Pacalini/PicaComic/master/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png",
+      "iconURL": "https://raw.githubusercontent.com/Pacalini/PicaComic/master/ios/Runner/Assets.xcassets/AppIcon.appiconset/AppIcon~ios-marketing.png",
       "tintColor": "#FCE4E4",
       "size": 13388036,
       "versions": [

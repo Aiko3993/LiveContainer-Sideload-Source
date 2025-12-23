@@ -176,21 +176,60 @@ def select_best_ipa(assets, app_config):
     # 4. Fallback: Just return the first one
     return ipa_assets[0]
 
-def is_square_image(image_url, client, tolerance=0.05):
-    """Check if image at URL is approximately square."""
+def get_image_quality(image_url, client):
+    """
+    Analyzes image quality and returns a score and its properties.
+    Score factors: squareness, lack of transparency, resolution.
+    """
     if not image_url or not image_url.startswith(('http://', 'https://')):
-        return False
+        return 0, False, False
+    
     try:
         response = client.get(image_url, timeout=10)
-        if not response: return False
+        if not response: return 0, False, False
         
         img = Image.open(BytesIO(response.content))
         width, height = img.size
+        
+        # 1. Squareness
         aspect_ratio = width / height
-        return (1.0 - tolerance) <= aspect_ratio <= (1.0 + tolerance)
+        is_square = 0.95 <= aspect_ratio <= 1.05
+        
+        # 2. Transparency check
+        has_transparency = False
+        if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+            # Check if there's actually any transparent pixel
+            img_rgba = img.convert("RGBA")
+            # Sample some pixels or check the whole alpha channel
+            # For performance, we check the corners which are most likely to be transparent in a rounded icon
+            corners = [
+                (0, 0), (width-1, 0), (0, height-1), (width-1, height-1),
+                (width//2, 0), (0, height//2), (width-1, height//2), (width//2, height-1)
+            ]
+            for x, y in corners:
+                if img_rgba.getpixel((x, y))[3] < 250:
+                    has_transparency = True
+                    break
+        
+        # Calculate quality score
+        quality = 0
+        if is_square: quality += 50
+        if not has_transparency: quality += 50
+        
+        # Resolution bonus (up to 100 points)
+        # 1024x1024 is the gold standard for App Store icons
+        res_score = min(100, (width * height) / (1024 * 1024) * 100)
+        quality += res_score
+        
+        # Opaque square bonus (Gold standard)
+        if is_square and not has_transparency:
+            quality += 50
+            if width >= 512: quality += 50
+        
+        return quality, is_square, has_transparency
     except Exception as e:
-        logger.warning(f"Could not check aspect ratio for {image_url}: {e}")
-        return True # Assume OK if check fails
+        logger.warning(f"Could not analyze image {image_url}: {e}")
+        return 0, False, False
 
 def apply_bundle_id_suffix(bundle_id, app_name, repo_name):
     """Apply unique suffixes to bundle identifier based on app name/flavor automatically."""
@@ -283,34 +322,31 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
         
         # Always try to find the best possible icon from the repo
         repo_icons = find_best_icon(repo, client)
-        repo_icon = None
-        if repo_icons:
-            # Try to find the first square one
-            for cand in repo_icons:
-                if is_square_image(cand, client):
-                    repo_icon = cand
-                    break
-            else:
-                repo_icon = repo_icons[0]
+        best_repo_icon = None
+        best_repo_score = -1
         
-        if repo_icon:
+        if repo_icons:
+            for cand in repo_icons:
+                q_score, is_sq, has_trans = get_image_quality(cand, client)
+                path_score = score_icon_path(cand)
+                total_score = q_score + path_score
+                
+                if total_score > best_repo_score:
+                    best_repo_score = total_score
+                    best_repo_icon = cand
+        
+        if best_repo_icon:
             if not best_icon:
-                best_icon = repo_icon
+                best_icon = best_repo_icon
             else:
-                # Compare scores, but give preference to squareness
-                score_current = score_icon_path(best_icon)
-                score_repo = score_icon_path(repo_icon)
+                # Compare current vs best found in repo
+                curr_q, _, _ = get_image_quality(best_icon, client)
+                curr_path = score_icon_path(best_icon)
+                curr_total = curr_q + curr_path
                 
-                # If current icon is not square but repo icon is, definitely switch
-                current_is_square = is_square_image(best_icon, client)
-                repo_is_square = is_square_image(repo_icon, client)
-                
-                if repo_is_square and not current_is_square:
-                    logger.info(f"Replacing non-square icon with square version from repo: {repo_icon}")
-                    best_icon = repo_icon
-                elif score_repo > score_current:
-                    logger.info(f"Replacing icon with better version from repo: {repo_icon} (Score {score_repo} > {score_current})")
-                    best_icon = repo_icon
+                if best_repo_score > curr_total + 10: # 10 points threshold to avoid jitter
+                    logger.info(f"Replacing icon with better version from repo: {best_repo_icon} (Score {best_repo_score} > {curr_total})")
+                    best_icon = best_repo_icon
         
         if best_icon:
             app_entry['iconURL'] = best_icon

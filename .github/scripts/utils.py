@@ -201,20 +201,25 @@ def score_icon_path(path):
     
     # Square/Resolution preference
     if 'square' in name: score += 20
-    if '1024' in name: score += 20
-    elif '512' in name: score += 15
-    elif '256' in name: score += 10
-    elif '120' in name: score += 5
+    if '1024' in name: score += 50
+    elif '512' in name: score += 40
+    elif '256' in name: score += 30
+    elif '120' in name: score += 10
+    elif 'marketing' in name: score += 45
     
     # Penalties for things that are likely NOT the main app icon or are pre-masked
     if 'android' in p: score -= 60
     if 'small' in name: score -= 20
     if 'toolbar' in name: score -= 30
     if 'preview' in name: score -= 40
-    if 'mask' in name: score -= 30
-    if 'rounded' in name: score -= 20
+    if 'mask' in name: score -= 50
+    if 'rounded' in name: score -= 50
+    if 'circle' in name: score -= 50
     if 'notification' in name: score -= 50
     if 'tabbar' in name: score -= 40
+    if 'watch' in p: score -= 30
+    if 'macos' in p: score -= 10 # macOS icons are often pre-rounded/irregular
+    if 'tvos' in p: score -= 20
     
     # URL reliability
     if 'raw.githubusercontent.com' in p: score += 20
