@@ -52,6 +52,8 @@ First, decide where your app belongs. **Do not mix categories.**
 *   **`github_repo`** (Required): The GitHub repository (e.g., `Aiko3993/MyCoolApp`).
     *   ✅ **Recommended**: `Aiko3993/MyCoolApp`
     *   ✅ **Supported**: `https://github.com/Aiko3993/MyCoolApp` (System will auto-parse)
+*   **`subtitle`** (Optional): A short subtitle displayed under the app name.
+*   **`tags`** (Optional): An array of strings (e.g., `["Emulator", "Manga"]`). Used for categorization and search.
 *   **`icon_url`** (Optional): A **direct link** to the app icon image.
     *   **Smart Selection**: If omitted, the system automatically scans the repo for the best icon. If provided, the system will still compare its quality with discovered icons and use the best one.
 *   **`pre_release`** (Optional): Boolean (`true` or `false`). Set to `true` to opt-in for beta/nightly versions. (Note: The system also auto-detects this if the app name contains "Nightly" or "Beta").
