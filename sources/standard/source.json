@@ -15,7 +15,6 @@
       "iconURL": "https://raw.githubusercontent.com/Aidoku/Aidoku/refs/heads/main/Shared/Assets.xcassets/AppIcon.appiconset/Icon.png",
       "tintColor": "#FF2F52",
       "size": 6197921,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -38,10 +37,9 @@
       "versionDescription": "## What's Changed\r\n* Update AltStore source with latest release by @github-actions[bot] in https://github.com/venera-app/venera/pull/602\r\n* Add encryptAes for js_engine by @liulifox233 in https://github.com/venera-app/venera/pull/645\r\n* Optimize iOS full-screen back gesture implementation by @liulifox233 in https://github.com/venera-app/venera/pull/643\r\n* Fix landscape reader layout and wrap long settings labels by @boa-z in https://github.com/venera-app/venera/pull/640\r\n* Enhance Cloudflare challenge detection logic by @Y-Ymeow in https://github.com/venera-app/venera/pull/619\r\n* interceptor: mask log by @Pacalini in https://github.com/venera-app/venera/pull/618\r\n* feat: skip sync setting by @Pacalini in https://github.com/venera-app/venera/pull/563\r\n* flutter 3.38.3 by @wgh136 in https://github.com/venera-app/venera/pull/648\r\n* fix: enable multi-select actions in local comics search mode by @wgh136 in https://github.com/venera-app/venera/pull/650\r\n* feat: add comment keyword blocking functionality by @wgh136 in https://github.com/venera-app/venera/pull/649\r\n\r\n## New Contributors\r\n* @Y-Ymeow made their first contribution in https://github.com/venera-app/venera/pull/619\r\n\r\n**Full Changelog**: https://github.com/venera-app/venera/compare/v1.6.0...v1.6.1",
       "downloadURL": "https://github.com/venera-app/venera/releases/download/v1.6.1/venera-ios-1.6.1%2B161.ipa",
       "localizedDescription": "A comic app",
-      "iconURL": "https://raw.githubusercontent.com/venera-app/venera/refs/heads/master/assets/app_icon.png",
+      "iconURL": "https://raw.githubusercontent.com/venera-app/venera/master/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png",
       "tintColor": "#2143F3",
       "size": 15202312,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -64,10 +62,9 @@
       "versionDescription": "NeoFreeBird is a modified Twitter app with branding reverts, BHTwitter and other QoL modifications. It also seems to be faster compared to the official Twitter app, which says something.\r\n\r\n### Change log:\r\n\r\n**Twitter, version 11.35:**\r\n- Updated the Twitter build to 11.35\r\n\r\n**NeoFreeBird, version 2.2:**\r\n- Fixed log in issues using new sign in flow (you can only sign in to one account at once but better than nothing) [#78]\r\n- Localized the Post > Tweet replacer\r\n- Improved the Open in Twitter extension\r\n- Minor bug fixes and other minor improvements\r\n\r\nThere are two versions, one with FixTwitterLogin dylib (standard) and one without. Try the regular one first, and if you’re unable to install it, try the one without. Both have the new sign in flow, the one with FixTwitterLogin just has the same dylib injected as 2.1 rev 2 to trick Attestation in some cases, allowing some users to sign in to multiple accounts. It works for some and not for others.\r\n\r\nIf you are already signed in to two accounts, you will still stay signed in to them, you just can't add more.",
       "downloadURL": "https://github.com/NeoFreeBird/app/releases/download/2.2/NeoFreeBird-2.2-Twitter-11.35-noFixTwitterLogin.ipa",
       "localizedDescription": "A modified Twitter app, with branding reverts, BHTwitter and other QoL modifications.",
-      "iconURL": "https://raw.githubusercontent.com/NeoFreeBird/app/refs/heads/main/Branding/Icon.png",
+      "iconURL": "https://raw.githubusercontent.com/NeoFreeBird/app/main/assets/main/PlugIns/OpenTwitterSafariExtension.appex/images/icon-512.png",
       "tintColor": "#1D9BF0",
       "size": 158452402,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -90,10 +87,9 @@
       "versionDescription": "- 支持自动跳过 OP 和 ED (部分新番)\r\n- 支持离线使用 (断网后播放缓存)\r\n- 增加弹幕时间偏移设置\r\n\r\n---- \r\n\r\n- 优化设置页细节 (#2653 by @sukurajima-mai)\r\n\r\nFull Changelog: https://github.com/open-ani/animeko/compare/v5.1.0...v5.2.0\r\n\r\n\r\n[//]: # (ANI-SERVER-MAGIC-SEPARATOR)\r\n\r\n[//]: # (注意: api server 依赖这个特殊分隔符)\r\n\r\n[//]: # (对于所有可用的变量列表, 参考 CI release.yml 的 step release-notes)\r\n\r\n[github-win-x64]: https://github.com/open-ani/ani/releases/download/v5.2.0/ani-5.2.0-windows-x86_64.zip\r\n\r\n[github-mac-x64]: https://github.com/open-ani/ani/releases/download/v5.2.0/ani-5.2.0-macos-x86_64.dmg\r\n\r\n[github-mac-aarch64]: https://github.com/open-ani/ani/releases/download/v5.2.0/ani-5.2.0-macos-aarch64.dmg\r\n\r\n[github-android]: https://github.com/open-ani/ani/releases/download/v5.2.0/ani-5.2.0-universal.apk\r\n\r\n[github-android-arm64-v8a]: https://github.com/open-ani/ani/releases/download/v5.2.0/ani-5.2.0-arm64-v8a.apk\r\n\r\n[github-android-armeabi-v7a]: https://github.com/open-ani/ani/releases/download/v5.2.0/ani-5.2.0-armeabi-v7a.apk\r\n\r\n[github-android-x86_64]: https://github.com/open-ani/ani/releases/download/v5.2.0/ani-5.2.0-x86_64.apk\r\n\r\n[cf-win-x64]: https://d.myani.org/v5.2.0/ani-5.2.0-windows-x86_64.zip\r\n\r\n[cf-linux-x64]: https://d.myani.org/v5.2.0/ani-5.2.0-linux-x86_64.appimage\r\n\r\n[cf-mac-x64]: https://d.myani.org/v5.2.0/ani-5.2.0-macos-x86_64.zip\r\n\r\n[cf-mac-aarch64]: https://d.myani.org/v5.2.0/ani-5.2.0-macos-aarch64.dmg\r\n\r\n[cf-ios]: https://d.myani.org/v5.2.0/ani-5.2.0.ipa\r\n\r\n[cf-android]: https://d.myani.org/v5.2.0/ani-5.2.0-universal.apk\r\n\r\n[cf-android-arm64-v8a]: https://d.myani.org/v5.2.0/ani-5.2.0-arm64-v8a.apk\r\n\r\n[cf-android-armeabi-v7a]: https://d.myani.org/v5.2.0/ani-5.2.0-armeabi-v7a.apk\r\n\r\n[cf-android-x86_64]: https://d.myani.org/v5.2.0/ani-5.2.0-x86_64.apk\r\n\r\n[ghproxy-win-x64]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0-windows-x86_64.zip\r\n\r\n[ghproxy-mac-x64]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0-macos-x86_64.zip\r\n\r\n[ghproxy-linux-x64]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0-linux-x86_64.appimage\r\n\r\n[ghproxy-mac-aarch64]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0-macos-aarch64.dmg\r\n\r\n[ghproxy-ios]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0.ios\r\n\r\n[ghproxy-android]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0-universal.apk\r\n\r\n[ghproxy-android-arm64-v8a]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0-arm64-v8a.apk\r\n\r\n[ghproxy-android-armeabi-v7a]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0-armeabi-v7a.apk\r\n\r\n[ghproxy-android-x86_64]: https://mirror.ghproxy.com/?q=https%3A%2F%2Fgithub.com%2Fopen-ani%2Fani%2Freleases%2Fdownload%2Fv5.2.0%2Fani-5.2.0-x86_64.apk\r\n\r\n[macos解决方案]: https://github.com/open-ani/ani/wiki/macOS-%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88\r\n\r\n[windows解决方案]: https://github.com/open-ani/ani/wiki/Windows-%E4%B8%8B%E5%AD%97%E4%BD%93%E4%B8%8E%E8%83%8C%E6%99%AF%E9%A2%9C%E8%89%B2%E5%BC%82%E5%B8%B8\r\n\r\n[linux安装说明]: https://github.com/open-ani/animeko/wiki/Linux-%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E\r\n\r\n[macos-x64安装说明]: https://github.com/open-ani/animeko/wiki/macOS-Intel-%E8%8A%AF%E7%89%87%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B\r\n\r\n[macos-intel-issue]: https://github.com/open-ani/animeko/issues/1345\r\n\r\n[linux-issue]: https://github.com/open-ani/animeko/issues/944\r\n\r\n[自签]: https://github.com/open-ani/animeko/wiki/iOS-%E8%87%AA%E7%AD%BE\r\n\r\n|                  | 下载                                               | 常见问题                                        |\r\n|------------------|--------------------------------------------------|---------------------------------------------|\r\n| 安卓 手机/平板         | [主线][cf-android] / [备线][ghproxy-android]         |                                             |\r\n| 安卓 电视            | 仍在开发中                                            | 现在可以使用平板版接鼠标使用                              |\r\n| iOS              | [主线][cf-ios] / [备线][ghproxy-ios]                 | 需要[自签][自签]                                  |\r\n| Windows          | [主线][cf-win-x64] / [备线][ghproxy-win-x64]         | 1. 目录不要有中文或者空格 <br/> 2. [显示异常][windows解决方案] |\r\n| macOS (M 系列芯片)   | [主线][cf-mac-aarch64] / [备线][ghproxy-mac-aarch64] | ⚠️ [安装后打不开][macos解决方案]                      |\r\n| macOS (Intel 芯片) | [主线][cf-mac-x64] / [备线][ghproxy-mac-x64]         | ⚠️ [安装教程][macos-x64安装说明]                    |\r\n| Linux AppImage   | [主线][cf-linux-x64] / [备线][ghproxy-linux-x64]     | ⚠️ [安装教程][linux安装说明]                        |\r\n\r\n[github-android-qr]: https://github.com/open-ani/ani/releases/download/v5.2.0/ani-5.2.0-universal.apk.github.qrcode.png\r\n\r\n[cf-android-qr]: https://d.myani.org/v5.2.0/ani-5.2.0-universal.apk.cloudflare.qrcode.png\r\n\r\n[cf-ios-qr]: https://d.myani.org/v5.2.0/ani-5.2.0.ipa.cloudflare.qrcode.png\r\n\r\n| 安卓 手机/平板                     | iOS IPA (需要[自签][自签])     | \r\n|------------------------------|--------------------------|\r\n| ![Cloudflare][cf-android-qr] | ![Cloudflare][cf-ios-qr] |\r\n\r\n\r\n<details>\r\n<summary> Android 细分架构下载 </summary>\r\n\r\n[//]: # (@formatter:off  因为\"版本\"前面不能换行)\r\n\r\n如果不知道自己是什么架构，建议下载 `universal` 版本。\r\n\r\n[//]: # (@formatter:on)\r\n\r\n| 处理器架构              | 适用于             | 下载                                                                                                      |\r\n|--------------------|-----------------|---------------------------------------------------------------------------------------------------------|\r\n| universal (推荐)     | 所有设备            | [主线][cf-android] / [备线][ghproxy-android] / [GitHub][github-android]                                     |\r\n| arm64-v8a (64 位)   | 几乎所有手机和平板       | [主线][cf-android-arm64-v8a] / [备线][ghproxy-android-arm64-v8a] / [GitHub][github-android-arm64-v8a]       |\r\n| armeabi-v7a (32 位) | 旧手机             | [主线][cf-android-armeabi-v7a] / [备线][ghproxy-android-armeabi-v7a] / [GitHub][github-android-armeabi-v7a] |\r\n| x86_64             | Chromebook 及模拟器 | [主线][cf-android-x86_64] / [备线][ghproxy-android-x86_64] / [GitHub][github-android-x86_64]                |\r\n\r\n</details>",
       "downloadURL": "https://github.com/open-ani/animeko/releases/download/v5.2.0/ani-5.2.0.ipa",
       "localizedDescription": "集找番、追番、看番的一站式弹幕追番平台，云收藏同步 (Bangumi)，离线缓存，BitTorrent，弹幕云过滤。100% Kotlin/Compose Multiplatform",
-      "iconURL": "https://raw.githubusercontent.com/open-ani/animeko/main/app/desktop/appResources/linux-x64/icon.png",
+      "iconURL": "https://raw.githubusercontent.com/open-ani/animeko/main/app/ios/Animeko/Assets.xcassets/AppIcon.appiconset/1024.png",
       "tintColor": "#2F3943",
       "size": 34231046,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -116,10 +112,9 @@
       "versionDescription": "页面优化\r\n优化下载\r\n重构 Log #1764 by @My-Responsitories\r\n推荐页单独卡片宽度 #1771 by @LiPolymer\r\n调整 #1762 #1765 #1773 by @My-Responsitories\r\n导入设置/登录信息支持输入 #1772 by @My-Responsitories\r\n修复 bug",
       "downloadURL": "https://github.com/bggRGjQaUbCoE/PiliPlus/releases/download/1.1.5.1/PiliPlus_ios_1.1.5%2B4442.ipa",
       "localizedDescription": "PiliPlus",
-      "iconURL": "https://raw.githubusercontent.com/bggRGjQaUbCoE/PiliPlus/main/assets/images/logo/logo.png",
+      "iconURL": "https://raw.githubusercontent.com/bggRGjQaUbCoE/PiliPlus/main/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
       "tintColor": "#5CB67B",
       "size": 24632567,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -142,10 +137,9 @@
       "versionDescription": "Apollo version: `v1.15.11`\nImprovedCustomApi version: `v1.2.6`\n\n## Release Notes\n- Fix video downloads failing on certain v.redd.it videos (issue: https://github.com/JeffreyCA/Apollo-ImprovedCustomApi/issues/75, PR: https://github.com/JeffreyCA/Apollo-ImprovedCustomApi/pull/76)\r\n    - Context: recently, Reddit started using [CMAF media format](https://developer.apple.com/documentation/http-live-streaming/about-the-common-media-application-format-with-http-live-streaming-hls) for serving video content, which Apollo does not natively support downloading for.\n## Known Issues\n- Apollo Ultra features may cause app to crash\n- Imgur multi-image upload\n- Uploads usually fail on the first attempt but subsequent retries should succeed\n- Share URLs in private messages and long-tapping them still open in the in-app browser\n",
       "downloadURL": "https://github.com/Balackburn/Apollo/releases/download/v1.15.11_1.2.6/Apollo-1.15.11_ImprovedCustomApi-1.2.6.ipa",
       "localizedDescription": "Altstore source and website for Apollo for Reddit (with ImprovedCustomApi)",
-      "iconURL": "https://raw.githubusercontent.com/Balackburn/Apollo/refs/heads/main/apollo_icons/icon_91.webp",
+      "iconURL": "https://raw.githubusercontent.com/Balackburn/Apollo/main/apollo_icons/icon_120.webp",
       "tintColor": "#6F5EFF",
       "size": 114656964,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -171,7 +165,6 @@
       "iconURL": "https://raw.githubusercontent.com/hrydgard/ppsspp/master/ios/assets.xcassets/AppIcon.appiconset/icon_backfill_1024.png",
       "tintColor": "#2D4553",
       "size": 29930616,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -197,7 +190,6 @@
       "iconURL": "https://raw.githubusercontent.com/LiveContainer/LiveContainer/main/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png",
       "tintColor": "#0050FF",
       "size": 4232092,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -223,7 +215,6 @@
       "iconURL": "https://raw.githubusercontent.com/LiveContainer/LiveContainer/main/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png",
       "tintColor": "#0050FF",
       "size": 4387422,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -249,7 +240,6 @@
       "iconURL": "https://raw.githubusercontent.com/LiveContainer/LiveContainer/main/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png",
       "tintColor": "#0050FF",
       "size": 36223272,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -275,7 +265,6 @@
       "iconURL": "https://raw.githubusercontent.com/LiveContainer/LiveContainer/main/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png",
       "tintColor": "#0050FF",
       "size": 36469536,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -301,7 +290,6 @@
       "iconURL": "https://raw.githubusercontent.com/utmapp/UTM/main/Platform/Assets.xcassets/AppIcon.appiconset/icon_512pt.png",
       "tintColor": "#4085EF",
       "size": 130036731,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
@@ -327,7 +315,6 @@
       "iconURL": "https://raw.githubusercontent.com/utmapp/UTM/main/Platform/Assets.xcassets/AppIcon.appiconset/icon_512pt.png",
       "tintColor": "#4085EF",
       "size": 130036994,
-      "permissions": {},
       "screenshotURLs": [],
       "versions": [
         {
