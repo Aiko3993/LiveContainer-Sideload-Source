@@ -52,8 +52,6 @@
 *   **`github_repo`** (必填): 应用的 GitHub 仓库地址 (例如 `Aiko3993/MyCoolApp`)。
     *   ✅ **推荐**: `Aiko3993/MyCoolApp`
     *   ✅ **支持**: `https://github.com/Aiko3993/MyCoolApp` (系统会自动识别)
-*   **`subtitle`** (选填): 应用副标题，显示在应用名称下方，简要描述应用功能。
-*   **`tags`** (选填): 字符串数组 (例如 `["Emulator", "Manga"]`)。用于分类和搜索。
 *   **`pre_release`** (选填): 布尔值 (`true` 或 `false`)。设置为 `true` 以获取 Beta/Nightly 版本。(提示：如果应用名包含 "Nightly" 或 "Beta"，系统会自动识别)。
 *   **`github_workflow`** (选填): GitHub Actions 工作流文件名 (例如 `build.yml`)。如果应用没有正式 Release，希望从 **GitHub Actions Artifacts** 抓取 IPA 时使用。
 *   **`artifact_name`** (选填): 使用 `github_workflow` 时，用于匹配特定 Artifact 名称的正则表达式。**提示**：系统内置了 5 步智能启发式搜索（包括 IPA 后缀匹配和关键字搜索），通常情况下您可以省略此字段。

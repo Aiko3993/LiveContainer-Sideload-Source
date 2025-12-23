@@ -2,9 +2,7 @@
   {
     "name": "Aidoku",
     "github_repo": "Aidoku/Aidoku",
-    "icon_url": "https://raw.githubusercontent.com/Aidoku/Aidoku/refs/heads/main/Shared/Assets.xcassets/AppIcon.appiconset/Icon.png",
-    "subtitle": "Free and open source manga reader",
-    "tags": ["Manga", "Reader"]
+    "icon_url": "https://raw.githubusercontent.com/Aidoku/Aidoku/refs/heads/main/Shared/Assets.xcassets/AppIcon.appiconset/Icon.png"
   },
   {
     "name": "Venera",
@@ -39,9 +37,7 @@
   {
     "name": "PPSSPP",
     "github_repo": "hrydgard/ppsspp",
-    "icon_url": "https://raw.githubusercontent.com/hrydgard/ppsspp/master/ios/assets.xcassets/AppIcon.appiconset/icon_backfill_1024.png",
-    "subtitle": "PSP emulator for iOS",
-    "tags": ["Emulator", "PSP"]
+    "icon_url": "https://raw.githubusercontent.com/hrydgard/ppsspp/master/ios/assets.xcassets/AppIcon.appiconset/icon_backfill_1024.png"
   },
   {
     "name": "LiveContainer (Nightly)",
@@ -101,11 +97,13 @@
     "bundle_id": "nya.asami.ksign"
   },
   {
+    "name": "Asspp",
+    "github_repo": "Lakr233/Asspp"
+  },
+  {
     "name": "Play! (Nightly)",
     "github_repo": "jpd002/Play-",
     "github_workflow": "build-ios.yaml",
-    "artifact_name": "Play_iOS",
-    "subtitle": "PlayStation 2 emulator",
-    "tags": ["Emulator", "PS2", "Nightly"]
+    "artifact_name": "Play_iOS"
   }
 ]

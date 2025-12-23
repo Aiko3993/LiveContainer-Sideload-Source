@@ -664,7 +664,6 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
 
         app_entry = {
             "name": name,
-            "subtitle": app_config.get('subtitle', ''),
             "githubRepo": repo, 
             "bundleIdentifier": bundle_id,
             "developerName": repo.split('/')[0],
@@ -678,7 +677,6 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
             "size": size,
             "permissions": {}, 
             "screenshotURLs": [], 
-            "tags": app_config.get('tags', []),
             "versions": [new_version_entry]
         }
         existing_source['apps'].append(app_entry)
