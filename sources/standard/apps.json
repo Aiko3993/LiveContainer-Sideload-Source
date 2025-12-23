@@ -60,5 +60,10 @@
     "name": "UTM",
     "github_repo": "utmapp/UTM",
     "pre_release": false
+  },
+  {
+    "name": "UTM HV",
+    "github_repo": "utmapp/UTM",
+    "pre_release": false
   }
 ]

@@ -1,6 +1,6 @@
 # Supported Apps
 
-> *Last Updated: 2025-12-23 09:54:38 (UTC)*
+> *Last Updated: 2025-12-23 17:56:52 (UTC)*
 
 ## Standard Apps
 
@@ -18,6 +18,7 @@
 | <img src="https://raw.githubusercontent.com/LiveContainer/LiveContainer/main/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png" width="48" height="48"> | **LiveContainer+SideStore** | Run iOS apps without actually installing them! | [LiveContainer/LiveContainer](https://github.com/LiveContainer/LiveContainer) |
 | <img src="https://raw.githubusercontent.com/LiveContainer/LiveContainer/main/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon1024.png" width="48" height="48"> | **LiveContainer+SideStore (Nightly)** | Run iOS apps without actually installing them! | [LiveContainer/LiveContainer](https://github.com/LiveContainer/LiveContainer) |
 | <img src="https://raw.githubusercontent.com/utmapp/UTM/main/Platform/Assets.xcassets/AppIcon.appiconset/icon_512pt.png" width="48" height="48"> | **UTM** | Virtual machines for iOS and macOS | [utmapp/UTM](https://github.com/utmapp/UTM) |
+| <img src="https://raw.githubusercontent.com/utmapp/UTM/main/Platform/Assets.xcassets/AppIcon.appiconset/icon_512pt.png" width="48" height="48"> | **UTM HV** | Virtual machines for iOS and macOS | [utmapp/UTM](https://github.com/utmapp/UTM) |
 
 ## NSFW Apps
 
