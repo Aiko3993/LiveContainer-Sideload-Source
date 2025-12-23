@@ -291,70 +291,129 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
 
     found_icon_auto = None
 
-    # Find latest release
-    release = client.get_latest_release(
-        repo, 
-        prefer_pre_release=app_config.get('pre_release', False),
-        tag_regex=app_config.get('tag_regex')
-    )
+    release = None
+    workflow_run = None
+    artifact = None
+    
+    # 1. Fetch Version Info (Release or Workflow)
+    workflow_file = app_config.get('github_workflow')
+    if workflow_file:
+        logger.info(f"Checking workflow {workflow_file} for {name}...")
+        workflow_run = client.get_latest_workflow_run(repo, workflow_file)
+        if not workflow_run:
+            logger.warning(f"No successful workflow run found for {name} ({workflow_file})")
+            return existing_source
+        
+        artifacts = client.get_workflow_run_artifacts(repo, workflow_run['id'])
+        artifact_name = app_config.get('artifact_name')
+        if artifact_name:
+            artifact = next((a for a in artifacts if a['name'] == artifact_name), None)
+        else:
+            artifact = next((a for a in artifacts if a['name'].lower().endswith('.ipa')), None)
+            if not artifact and artifacts:
+                artifact = artifacts[0]
+        
+        if not artifact:
+            logger.warning(f"No suitable artifact found for {name} in run {workflow_run['id']}")
+            return existing_source
+            
+        version = workflow_run['head_sha'][:7]
+        release_date = workflow_run['created_at'].split('T')[0]
+        version_desc = f"Nightly build from commit {workflow_run['head_sha']}"
+        
+        wf_name_clean = workflow_file.replace('.yml', '').replace('.yaml', '')
+        branch = workflow_run['head_branch']
+        download_url = f"https://nightly.link/{repo}/workflows/{wf_name_clean}/{branch}/{artifact['name']}.zip"
+        size = artifact['size_in_bytes']
+    else:
+        release = client.get_latest_release(
+            repo, 
+            prefer_pre_release=app_config.get('pre_release', False),
+            tag_regex=app_config.get('tag_regex')
+        )
 
-    if not release:
-        logger.warning(f"No release found for {name}")
-        return existing_source
+        if not release:
+            logger.warning(f"No release found for {name}")
+            return existing_source
 
+        ipa_asset = select_best_ipa(release.get('assets', []), app_config)
+        if not ipa_asset:
+            logger.warning(f"No IPA found for {name}")
+            return existing_source
+
+        download_url = ipa_asset['browser_download_url']
+        version = release['tag_name'].lstrip('v')
+        release_date = release['published_at'].split('T')[0]
+        version_desc = release['body'] or "Update"
+        size = ipa_asset['size']
+
+    # 2. Check if already up to date and update metadata
+    found_icon_auto = None
+    found_bundle_id_auto = None
+    
     if app_entry:
         app_entry['githubRepo'] = repo 
         app_entry['name'] = name 
         
-        # 1. Update Bundle ID immediately for coexistence (even if version is up to date)
+        # Check if we can skip early based on download URL
+        if any(v.get('downloadURL') == download_url for v in app_entry.get('versions', [])):
+             # Even if up to date, we might want to update some metadata from config
+             config_icon = app_config.get('icon_url')
+             if config_icon and config_icon not in ['None', '_No response_'] and app_entry.get('iconURL') != config_icon:
+                 app_entry['iconURL'] = config_icon
+                 logger.info(f"Updated icon for {name} from config")
+             
+             config_tint = app_config.get('tint_color')
+             if config_tint and app_entry.get('tintColor') != config_tint:
+                 app_entry['tintColor'] = config_tint
+                 logger.info(f"Updated tint color for {name} from config")
+             
+             # If it's already up to date, we skip the heavy lifting (icon scraping & IPA download)
+             logger.info(f"Skipping {name} (Already up to date)")
+             return existing_source
+
+        # If not skipped, proceed with metadata updates
         if 'bundleIdentifier' in app_entry:
             old_id = app_entry['bundleIdentifier']
             new_id = apply_bundle_id_suffix(old_id, name, repo)
             if old_id != new_id:
                 logger.info(f"Updated Bundle ID for {name}: {old_id} -> {new_id}")
                 app_entry['bundleIdentifier'] = new_id
-        
-        # 2. Icon Selection: Compare user-provided vs. auto-discovered
+
         config_icon = app_config.get('icon_url')
         current_icon = app_entry.get('iconURL')
         
-        best_icon = config_icon if config_icon and config_icon not in ['None', '_No response_'] else current_icon
+        # Fast path: If config has icon, use it and skip scraping
+        if config_icon and config_icon not in ['None', '_No response_']:
+            app_entry['iconURL'] = config_icon
+        else:
+            # Only scrape if we don't have a good icon yet or want to check for better ones
+            repo_icons = find_best_icon(repo, client)
+            best_repo_score = -1
+            best_repo_icon = None
+            if repo_icons:
+                for cand in repo_icons:
+                    q_score, is_sq, has_trans = get_image_quality(cand, client)
+                    path_score = score_icon_path(cand)
+                    total_score = q_score + path_score
+                    if total_score > best_repo_score:
+                        best_repo_score = total_score
+                        best_repo_icon = cand
+            
+            if best_repo_icon:
+                if not current_icon:
+                    logger.info(f"Found icon for {name}: {best_repo_icon}")
+                    app_entry['iconURL'] = best_repo_icon
+                    found_icon_auto = best_repo_icon
+                else:
+                    curr_q, _, _ = get_image_quality(current_icon, client)
+                    curr_path = score_icon_path(current_icon)
+                    curr_total = curr_q + curr_path
+                    if best_repo_score > curr_total + 15: # Significant improvement
+                        logger.info(f"Replacing icon with better version from repo: {best_repo_icon}")
+                        app_entry['iconURL'] = best_repo_icon
+                        found_icon_auto = best_repo_icon
         
-        # Always try to find the best possible icon from the repo
-        repo_icons = find_best_icon(repo, client)
-        best_repo_icon = None
-        best_repo_score = -1
-        
-        if repo_icons:
-            for cand in repo_icons:
-                q_score, is_sq, has_trans = get_image_quality(cand, client)
-                path_score = score_icon_path(cand)
-                total_score = q_score + path_score
-                
-                if total_score > best_repo_score:
-                    best_repo_score = total_score
-                    best_repo_icon = cand
-        
-        if best_repo_icon:
-            if not best_icon:
-                best_icon = best_repo_icon
-            else:
-                # Compare current vs best found in repo
-                curr_q, _, _ = get_image_quality(best_icon, client)
-                curr_path = score_icon_path(best_icon)
-                curr_total = curr_q + curr_path
-                
-                # Apply a moderate bonus if the icon was explicitly provided by the user in the config/issue
-                if config_icon and best_icon == config_icon:
-                    curr_total += 80 # Moderate bonus for user-submitted icons
-                
-                if best_repo_score > curr_total + 10: # 10 points threshold to avoid jitter
-                    logger.info(f"Replacing icon with better version from repo: {best_repo_icon} (Score {best_repo_score} > {curr_total})")
-                    best_icon = best_repo_icon
-        
-        if best_icon:
-            app_entry['iconURL'] = best_icon
-
         config_tint = app_config.get('tint_color')
         if config_tint:
             app_entry['tintColor'] = config_tint
@@ -364,67 +423,59 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
         
         app_entry.pop('permissions', None)
 
-    # Find IPA
-    ipa_asset = select_best_ipa(release.get('assets', []), app_config)
-    if not ipa_asset:
-        logger.warning(f"No IPA found for {name}")
-        return existing_source
-
-    download_url = ipa_asset['browser_download_url']
-    
-    # Check if version exists (Skip download)
-    if app_entry:
-         if any(v.get('downloadURL') == download_url for v in app_entry.get('versions', [])):
-             logger.info(f"Skipping {name} (Already up to date)")
-             return existing_source
-
-    logger.info(f"Downloading IPA for {name}...")
-    
+    # 3. Download and process IPA for metadata
+    logger.info(f"Downloading IPA/Artifact for {name}...")
     fd, temp_path = tempfile.mkstemp(suffix='.ipa')
     os.close(fd)
     
     try:
-        with client.session.get(download_url, stream=True, timeout=300) as r:
-            r.raise_for_status()
-            with open(temp_path, 'wb') as f:
-                shutil.copyfileobj(r.raw, f)
+        if workflow_file:
+            content = client.download_artifact(repo, artifact['id'])
+            if not content: raise Exception("Failed to download artifact")
+            with zipfile.ZipFile(BytesIO(content)) as z:
+                ipa_in_zip = next((n for n in z.namelist() if n.lower().endswith('.ipa')), None)
+                if not ipa_in_zip:
+                    raise Exception(f"No IPA found inside artifact ZIP for {name}")
+                with open(temp_path, 'wb') as f:
+                    f.write(z.read(ipa_in_zip))
+        else:
+            with client.session.get(download_url, stream=True, timeout=300) as r:
+                r.raise_for_status()
+                with open(temp_path, 'wb') as f:
+                    shutil.copyfileobj(r.raw, f)
 
         default_bundle_id = f"com.placeholder.{name.lower().replace(' ', '')}"
-        version, build, bundle_id = get_ipa_metadata(temp_path, default_bundle_id)
+        ipa_version, ipa_build, bundle_id = get_ipa_metadata(temp_path, default_bundle_id)
+        found_bundle_id_auto = bundle_id
         
-        if not version:
+        if workflow_file and ipa_version:
+            version = f"{ipa_version}-nightly.{ipa_build}"
+            
+        if not version and not ipa_version:
             logger.warning(f"Failed to parse IPA metadata for {name}, using fallback.")
-            version = release['tag_name'].lstrip('v')
+            version = "0.0.0-nightly"
             bundle_id = default_bundle_id
 
         sha256 = get_ipa_sha256(temp_path)
-        
-        # Ensure pre-release versions have unique bundle identifiers to coexist
         bundle_id = apply_bundle_id_suffix(bundle_id, name, repo)
 
     except Exception as e:
-        logger.error(f"Download or processing failed for {name}: {e}")
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
+        logger.error(f"Processing failed for {name}: {e}")
+        if os.path.exists(temp_path): os.remove(temp_path)
         return existing_source
     finally:
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
+        if os.path.exists(temp_path): os.remove(temp_path)
     
+    # 4. Finalize Entry
     repo_info = client.get_repo_info(repo) or {}
+    main_desc = repo_info.get('description') or "No description available."
     
-    repo_desc = repo_info.get('description') or "No description available."
-    main_desc = repo_desc
-    
-    version_desc = release['body'] or "Update"
-    release_date = release['published_at'].split('T')[0]
-
     new_version_entry = {
         "version": version,
         "date": release_date,
         "localizedDescription": version_desc,
         "downloadURL": download_url,
-        "size": ipa_asset['size'],
+        "size": size,
         "sha256": sha256
     }
 
@@ -437,7 +488,7 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
             "versionDescription": version_desc,
             "downloadURL": download_url,
             "localizedDescription": main_desc, 
-            "size": ipa_asset['size'],
+            "size": size,
             "sha256": sha256,
             "bundleIdentifier": bundle_id 
         })
@@ -451,13 +502,16 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
             if icon_candidates:
                 # Try to find the first square icon among top candidates
                 for cand in icon_candidates:
-                    if is_square_image(cand, client):
+                    q_score, is_sq, has_trans = get_image_quality(cand, client)
+                    if is_sq:
                         icon_url = cand
+                        found_icon_auto = cand
                         logger.info(f"Selected square icon for {name}: {icon_url}")
                         break
                 else:
                     # Fallback to the best scored one if no square found
                     icon_url = icon_candidates[0]
+                    found_icon_auto = icon_candidates[0]
                     logger.warning(f"No square icon found for {name}, using best candidate: {icon_url}")
         
         tint_color = app_config.get('tint_color')
@@ -477,7 +531,7 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
             "localizedDescription": main_desc,
             "iconURL": icon_url,
             "tintColor": tint_color,
-            "size": ipa_asset['size'],
+            "size": size,
             "permissions": {}, 
             "screenshotURLs": [], 
             "versions": [new_version_entry]
@@ -485,13 +539,18 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
         existing_source['apps'].append(app_entry)
 
     # Sync found metadata back to apps_list_to_update
-    if found_icon_auto and apps_list_to_update is not None:
+    if (found_icon_auto or found_bundle_id_auto) and apps_list_to_update is not None:
         # Find the original config entry
-        orig_config = next((item for item in apps_list_to_update if item.get('github_repo') == repo), None)
+        orig_config = next((item for item in apps_list_to_update if item.get('github_repo') == repo and item.get('name') == name), None)
         if orig_config:
-            if not orig_config.get('icon_url'):
+            if found_icon_auto and not orig_config.get('icon_url'):
                 logger.info(f"Syncing found icon back to apps.json for {name}")
                 orig_config['icon_url'] = found_icon_auto
+            if found_bundle_id_auto and not orig_config.get('bundle_id'):
+                # We only sync back if it's not a placeholder
+                if not found_bundle_id_auto.startswith('com.placeholder.'):
+                    logger.info(f"Syncing found bundle_id back to apps.json for {name}")
+                    orig_config['bundle_id'] = found_bundle_id_auto
 
     return existing_source
 

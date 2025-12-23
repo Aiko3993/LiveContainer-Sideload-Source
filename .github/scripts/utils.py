@@ -173,6 +173,29 @@ class GitHubClient:
         resp = self.get(url)
         return resp.json() if resp else None
 
+    def get_latest_workflow_run(self, repo, workflow_file, branch=None):
+        """Fetch the latest successful workflow run."""
+        url = f"https://api.github.com/repos/{repo}/actions/workflows/{workflow_file}/runs?status=success&per_page=1"
+        if branch:
+            url += f"&branch={branch}"
+        resp = self.get(url)
+        if not resp: return None
+        runs = resp.json().get('workflow_runs', [])
+        return runs[0] if runs else None
+
+    def get_workflow_run_artifacts(self, repo, run_id):
+        """Fetch artifacts for a specific workflow run."""
+        url = f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/artifacts"
+        resp = self.get(url)
+        if not resp: return []
+        return resp.json().get('artifacts', [])
+
+    def download_artifact(self, repo, artifact_id):
+        """Download an artifact by ID. Returns the response content (ZIP file)."""
+        url = f"https://api.github.com/repos/{repo}/actions/artifacts/{artifact_id}/zip"
+        resp = self.get(url)
+        return resp.content if resp else None
+
 def normalize_name(s):
     """Normalize string for fuzzy comparison: lowercase and remove non-alphanumeric chars and common version suffixes."""
     if not s: return ""

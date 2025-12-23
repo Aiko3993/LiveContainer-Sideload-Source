@@ -65,5 +65,35 @@
     "name": "UTM HV",
     "github_repo": "utmapp/UTM",
     "pre_release": false
+  },
+  {
+    "name": "Amethyst (Nightly)",
+    "github_repo": "AngelAuraMC/Amethyst-iOS",
+    "github_workflow": "development.yml",
+    "artifact_name": "org.angelauramc.amethyst-ios.ipa"
+  },
+  {
+    "name": "Mangayomi",
+    "github_repo": "kodjodevf/mangayomi",
+    "icon_url": "https://raw.githubusercontent.com/kodjodevf/mangayomi/main/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
+    "bundle_id": "com.kodjodevf.mangayomi"
+  },
+  {
+    "name": "Feather",
+    "github_repo": "khcrysalis/Feather",
+    "icon_url": "https://raw.githubusercontent.com/khcrysalis/Feather/main/Feather/Resources/Assets.xcassets/AppIcon.appiconset/feather.png",
+    "bundle_id": "thewonderofyou.Feather"
+  },
+  {
+    "name": "SideStore",
+    "github_repo": "SideStore/SideStore",
+    "icon_url": "https://raw.githubusercontent.com/SideStore/SideStore/develop/AltStore/Resources/Icons.xcassets/AppIcon.appiconset/1024.png",
+    "bundle_id": "com.SideStore.SideStore"
+  },
+  {
+    "name": "Ksign",
+    "github_repo": "Nyasami/Ksign",
+    "icon_url": "https://raw.githubusercontent.com/Nyasami/Ksign/main/Ksign/Resources/Assets.xcassets/AppIcon.appiconset/Ksign-default.png",
+    "bundle_id": "nya.asami.ksign"
   }
 ]
