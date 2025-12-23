@@ -309,9 +309,9 @@ def score_icon_path(path):
         'rounded': 10
     }
     
-    name_lower = name.lower()
+    filename = os.path.basename(p)
     for kw, bonus in icon_keywords.items():
-        if kw in name_lower:
+        if kw in filename:
             score += bonus
             
     # Priority paths (like xcassets)
@@ -321,23 +321,23 @@ def score_icon_path(path):
         score += 50
     
     # Square/Resolution preference
-    if 'square' in name: score += 20
-    if '1024' in name: score += 50
-    elif '512' in name: score += 40
-    elif '256' in name: score += 30
-    elif '120' in name: score += 10
-    elif 'marketing' in name: score += 45
+    if 'square' in filename: score += 20
+    if '1024' in filename: score += 50
+    elif '512' in filename: score += 40
+    elif '256' in filename: score += 30
+    elif '120' in filename: score += 10
+    elif 'marketing' in filename: score += 45
     
     # Penalties for things that are likely NOT the main app icon or are pre-masked
     if 'android' in p: score -= 60
-    if 'small' in name: score -= 20
-    if 'toolbar' in name: score -= 30
-    if 'preview' in name: score -= 40
-    if 'mask' in name: score -= 50
-    if 'rounded' in name: score -= 50
-    if 'circle' in name: score -= 50
-    if 'notification' in name: score -= 50
-    if 'tabbar' in name: score -= 40
+    if 'small' in filename: score -= 20
+    if 'toolbar' in filename: score -= 30
+    if 'preview' in filename: score -= 40
+    if 'mask' in filename: score -= 50
+    if 'rounded' in filename: score -= 50
+    if 'circle' in filename: score -= 50
+    if 'notification' in filename: score -= 50
+    if 'tabbar' in filename: score -= 40
     if 'watch' in p: score -= 30
     if 'macos' in p: score -= 10 # macOS icons are often pre-rounded/irregular
     if 'tvos' in p: score -= 20
