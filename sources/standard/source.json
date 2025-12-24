@@ -382,17 +382,24 @@
       "githubRepo": "kodjodevf/mangayomi",
       "bundleIdentifier": "com.kodjodevf.mangayomi",
       "developerName": "kodjodevf",
-      "version": "0.6.85",
-      "versionDate": "2025-12-10",
-      "versionDescription": "## What's Changed\r\n* Integrate MExtensionServer for Android\r\n* Android no longer needs the APKBridge server.\r\n* fix: updated statistics to use async fetch from db by @Whiskas101 in https://github.com/kodjodevf/mangayomi/pull/618\r\n* Add new feature: Always On Top on the anime player view. by @hndrbrm in https://github.com/kodjodevf/mangayomi/pull/614\r\n* AppImage Fix by @NBA2K1 in https://github.com/kodjodevf/mangayomi/pull/624\r\n* Add default user agent setting\r\n* Refactor reader page view and logic\r\n\r\n\r\n**Full Changelog**: https://github.com/kodjodevf/mangayomi/compare/v0.6.80...v0.6.85",
-      "downloadURL": "https://github.com/kodjodevf/mangayomi/releases/download/v0.6.85/Mangayomi-v0.6.85-ios.ipa",
+      "version": "0.6.90",
+      "versionDate": "2025-12-23",
+      "versionDescription": "## What's Changed\r\n* Add log switch to about-menu by @NBA2K1 in https://github.com/kodjodevf/mangayomi/pull/629\r\n* Path optimizations by @NBA2K1 in https://github.com/kodjodevf/mangayomi/pull/632\r\n* fix: show chanded source preference for mihon source\r\n* Chapter jump fix in vertical continuous mode\r\n* some fixes\r\n\r\n\r\n**Full Changelog**: https://github.com/kodjodevf/mangayomi/compare/v0.6.85...v0.6.90",
+      "downloadURL": "https://github.com/kodjodevf/mangayomi/releases/download/v0.6.90/Mangayomi-v0.6.90-ios.ipa",
       "localizedDescription": "Free and open source application for reading manga, novels, and watching animes available on Android, iOS, macOS, Linux and Windows",
       "iconURL": "https://raw.githubusercontent.com/kodjodevf/mangayomi/main/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
       "tintColor": "#BE1622",
-      "size": 44541949,
-      "permissions": {},
+      "size": 45074150,
       "screenshotURLs": [],
       "versions": [
+        {
+          "version": "0.6.90",
+          "date": "2025-12-23",
+          "localizedDescription": "## What's Changed\r\n* Add log switch to about-menu by @NBA2K1 in https://github.com/kodjodevf/mangayomi/pull/629\r\n* Path optimizations by @NBA2K1 in https://github.com/kodjodevf/mangayomi/pull/632\r\n* fix: show chanded source preference for mihon source\r\n* Chapter jump fix in vertical continuous mode\r\n* some fixes\r\n\r\n\r\n**Full Changelog**: https://github.com/kodjodevf/mangayomi/compare/v0.6.85...v0.6.90",
+          "downloadURL": "https://github.com/kodjodevf/mangayomi/releases/download/v0.6.90/Mangayomi-v0.6.90-ios.ipa",
+          "size": 45074150,
+          "sha256": "3d0c1f7adb50f6be87ad48984f1f2b719f492a30691ce2a8984c4a6c933bee70"
+        },
         {
           "version": "0.6.85",
           "date": "2025-12-10",
@@ -402,7 +409,7 @@
           "sha256": "e3e2b53de95c42686b9953d389b32b84a8498fd3d841693a593ee265a083f3c0"
         }
       ],
-      "sha256": "e3e2b53de95c42686b9953d389b32b84a8498fd3d841693a593ee265a083f3c0"
+      "sha256": "3d0c1f7adb50f6be87ad48984f1f2b719f492a30691ce2a8984c4a6c933bee70"
     },
     {
       "name": "Feather",
@@ -517,16 +524,24 @@
       "githubRepo": "jpd002/Play-",
       "bundleIdentifier": "com.virtualapplications.play.nightly",
       "developerName": "jpd002",
-      "version": "0.71-84-g5171569d.2025-12-23",
-      "versionDate": "2025-12-23",
-      "versionDescription": "Nightly build from commit 5171569d0018e02f731d63ac37d8c34da41ff0a7",
-      "downloadURL": "https://github.com/Aiko3993/iOS-Sideload-Source/releases/download/app-artifacts/jpd002_Play-_Play_iOS_5171569.ipa",
+      "version": "0.71-86-gd0f13752.2025-12-24",
+      "versionDate": "2025-12-24",
+      "versionDescription": "Nightly build from commit d0f1375248e3003199cb973a12332b4cc9f0724f",
+      "downloadURL": "https://github.com/Aiko3993/iOS-Sideload-Source/releases/download/app-artifacts/jpd002_Play-_Play_iOS_d0f1375.ipa",
       "localizedDescription": "Play! - PlayStation2 Emulator",
       "iconURL": "https://raw.githubusercontent.com/jpd002/Play-/master/Source/ui_ios/Resources/icon@2x.png",
       "tintColor": "#BCBCFF",
-      "size": 7085608,
+      "size": 7085982,
       "screenshotURLs": [],
       "versions": [
+        {
+          "version": "0.71-86-gd0f13752.2025-12-24",
+          "date": "2025-12-24",
+          "localizedDescription": "Nightly build from commit d0f1375248e3003199cb973a12332b4cc9f0724f",
+          "downloadURL": "https://github.com/Aiko3993/iOS-Sideload-Source/releases/download/app-artifacts/jpd002_Play-_Play_iOS_d0f1375.ipa",
+          "size": 7085982,
+          "sha256": "1911d84624edf4da55ebe718aead87d81326cd52df15272cccac85c71c00022b"
+        },
         {
           "version": "0.71-84-g5171569d.2025-12-23",
           "date": "2025-12-23",
@@ -536,7 +551,7 @@
           "sha256": "a30d8c9588a3673d7662218a96d4268f5d019dd6ce3f3c9140cf49f1eb5170c2"
         }
       ],
-      "sha256": "a30d8c9588a3673d7662218a96d4268f5d019dd6ce3f3c9140cf49f1eb5170c2"
+      "sha256": "1911d84624edf4da55ebe718aead87d81326cd52df15272cccac85c71c00022b"
     }
   ],
   "news": []
