@@ -822,7 +822,7 @@ def process_app(app_config, existing_source, client, apps_list_to_update=None):
 def update_repo(config_file, source_file, source_name, source_identifier, client):
     if not os.path.exists(config_file):
         logger.warning(f"Config file not found: {config_file}")
-        return
+        return False
 
     apps = load_json(config_file)
     # Create a snapshot to detect changes
@@ -830,6 +830,8 @@ def update_repo(config_file, source_file, source_name, source_identifier, client
     original_apps = copy.deepcopy(apps)
     
     source_data = load_existing_source(source_file, source_name, source_identifier)
+    # Create a snapshot of source data to detect changes
+    original_source_data = copy.deepcopy(source_data)
     
     source_data['name'] = source_name
     source_data['identifier'] = source_identifier
@@ -883,7 +885,17 @@ def update_repo(config_file, source_file, source_name, source_identifier, client
         return 9999
 
     source_data['apps'].sort(key=get_sort_key)
-    save_json(source_file, source_data)
+    
+    # Only save if there are actual changes
+    has_changes = False
+    if source_data != original_source_data:
+        logger.info(f"Changes detected in {source_file}, saving...")
+        save_json(source_file, source_data)
+        has_changes = True
+    else:
+        logger.info(f"No changes detected in {source_file}, skipping save.")
+    
+    return has_changes or apps != original_apps
 
 def generate_combined_apps_md(source_file_standard, source_file_nsfw, output_file):
     """Generate a combined Markdown file listing all apps using local source.json data."""
@@ -944,13 +956,17 @@ def main():
     client = GitHubClient()
 
     # Update Standard Source
-    update_repo('sources/standard/apps.json', 'sources/standard/source.json', "Aiko3993's Sideload Source", "io.github.aiko3993.source", client)
+    changed_std = update_repo('sources/standard/apps.json', 'sources/standard/source.json', "Aiko3993's Sideload Source", "io.github.aiko3993.source", client)
     
     # Update NSFW Source
-    update_repo('sources/nsfw/apps.json', 'sources/nsfw/source.json', "Aiko3993's Sideload Source (NSFW)", "io.github.aiko3993.source.nsfw", client)
+    changed_nsfw = update_repo('sources/nsfw/apps.json', 'sources/nsfw/source.json', "Aiko3993's Sideload Source (NSFW)", "io.github.aiko3993.source.nsfw", client)
 
-    # Generate Combined App List
-    generate_combined_apps_md('sources/standard/apps.json', 'sources/nsfw/apps.json', 'APPS.md')
+    # Generate Combined App List only if something changed or APPS.md is missing
+    if changed_std or changed_nsfw or not os.path.exists('APPS.md'):
+        logger.info("Generating updated APPS.md...")
+        generate_combined_apps_md('sources/standard/apps.json', 'sources/nsfw/apps.json', 'APPS.md')
+    else:
+        logger.info("No changes in sources, skipping APPS.md regeneration.")
 
 if __name__ == "__main__":
     main()
